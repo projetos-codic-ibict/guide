@@ -1,0 +1,1 @@
+C:\wamp64\bin\php\php8.1.0\php %1 %2 %3

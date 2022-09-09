@@ -1,16 +1,16 @@
 <?php
 // Include config file
 require_once "config.php";
- 
+
 // Define variables and initialize with empty values
 $ordem = $nome = "";
 $ordem_err = $nome_err = "";
- 
+
 // Processing form data when form is submitted
 if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Get hidden input value
     $id = $_POST["id"];
-    
+
     // Validate name
     $input_ordem = trim($_POST["ordem"]);
     $ordem = $input_ordem;
@@ -21,41 +21,41 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     } else{
         $name = $input_name;
     }*/
-    
+
     // Validate address address
     $input_nome = trim($_POST["nome"]);
     $nome = $input_nome;
     /*if(empty($input_address)){
-        $address_err = "Please enter an address.";     
+        $address_err = "Please enter an address.";
     } else{
         $address = $input_address;
     }*/
-    
+
     // Validate salary
     //$input_salary = trim($_POST["salary"]);
     //$salary = $input_salary;
    /* if(empty($input_salary)){
-        $salary_err = "Please enter the salary amount.";     
+        $salary_err = "Please enter the salary amount.";
     } elseif(!ctype_digit($input_salary)){
         $salary_err = "Please enter a positive integer value.";
     } else{
         $salary = $input_salary;
     }*/
-    
+
     // Check input errors before inserting in database
     if(empty($ordem_err) && empty($nome_err)){
         // Prepare an update statement
         $sql = "UPDATE secao SET ordem=?, nome=? WHERE id=?";
-         
+
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "ssi", $param_ordem, $param_nome, $param_id);
-            
+
             // Set parameters
             $param_ordem = $ordem;
             $param_nome = $nome;
             $param_id = $id;
-            
+
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Records updated successfully. Redirect to landing page
@@ -65,11 +65,11 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
-         
+
         // Close statement
         mysqli_stmt_close($stmt);
     }
-    
+
     // Close connection
     mysqli_close($link);
 } else{
@@ -77,25 +77,25 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
         // Get URL parameter
         $id =  trim($_GET["id"]);
-        
+
         // Prepare a select statement
         $sql = "SELECT * FROM secao WHERE id = ?";
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "i", $param_id);
-            
+
             // Set parameters
             $param_id = $id;
-            
+
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 $result = mysqli_stmt_get_result($stmt);
-    
+
                 if(mysqli_num_rows($result) == 1){
                     /* Fetch result row as an associative array. Since the result set
                     contains only one row, we don't need to use while loop */
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-                    
+
                     // Retrieve individual field value
                     $ordem = $row["ordem"];
                     $nome = $row["nome"];
@@ -104,15 +104,15 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     header("location: error.php");
                     exit();
                 }
-                
+
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
-        
+
         // Close statement
         mysqli_stmt_close($stmt);
-        
+
         // Close connection
         mysqli_close($link);
     }  else{
@@ -122,7 +122,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     }
 }
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,7 +151,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                         <div class="form-group">
                             <label>Ordem</label>
                             <input type="text" name="ordem" class="form-control" value="<?php echo $ordem; ?>">
-                            
+
                         </div>
                         <h1>Nome</h1>
                         <textarea name="nome" cols="40"><?php echo $nome;?></textarea><br>
@@ -160,7 +160,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                         <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
                     </form>
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </body>
