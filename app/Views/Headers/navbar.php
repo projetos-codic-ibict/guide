@@ -9,9 +9,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="<?= getenv("app.baseURL"); ?>/index/guide/sections">Sections</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="<?= getenv("app.baseURL"); ?>/index/guide/contents">Contents</a>
-                </li>
             </ul>
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

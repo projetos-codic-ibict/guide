@@ -19,7 +19,15 @@ class GuideSections extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '400',
             ],
+            'sc_path' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+            ],
             'sc_seq' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
+            'sc_father' => [
                 'type' => 'INT',
                 'null' => true,
             ],

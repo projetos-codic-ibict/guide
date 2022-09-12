@@ -35,8 +35,12 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
 $routes->get('/(:any)', 'Guide::$1');
 $routes->get('/guide/(:any)/(:any)', 'Guide::$1/$2');
+
+$routes->post('/(:any)', 'Guide::$1');
+$routes->post('/guide/(:any)/(:any)', 'Guide::$1/$2');
 
 $routes->get('/', 'Guide::index');
 
