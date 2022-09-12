@@ -38,7 +38,7 @@ if ($id_sc == 0)
                 <label>Father Class</label>
                 <?php
                 $Sections = new \App\Models\Guide\GuideSection();
-                $ds = $Sections->where('sc_father', null)->findAll();
+                $ds = $Sections->where('sc_father', null)->Orwhere('sc_father', 0)->findAll();
                 $options = array();
                 $options[''] = 'Selecione';
                 for ($r = 0; $r < count($ds); $r++) {

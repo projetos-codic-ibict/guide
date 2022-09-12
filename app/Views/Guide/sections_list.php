@@ -23,7 +23,7 @@
                                 <td><?= $row['sc_seq']; ?></td>
                                 <td><?= $row['sc_path']; ?></td>
                                 <td><?= $row['sc_father_name']; ?></td>
-                                <td><?= $row['sc_name']; ?></td>
+                                <td><a href="<?= PATH . '/index/guide/sections_view?id='.$row['id_sc']; ?>" class="text-secondary" style="text-decoration: none;"><?= $row['sc_name']; ?></a></td>
                                 <td class="text-center">
                                     <a href="/index/guide/sections_view?id=<?= $row['id_sc']; ?>" class="mr-3" title="Explorar" data-toggle="tooltip"><span class="fa fa-eye"></span></a>
                                     <a href="/index/guide/sections_edit?id=<?= $row['id_sc']; ?>" class="mr-3" title="Alterar" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>

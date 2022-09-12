@@ -109,6 +109,14 @@ class GuideSection extends Model
             ->join('guide_section as gs', 'gs.id_sc = guide_section.sc_father', 'left')
             ->find($id);
             $sx .= view('Guide/section', $dt);
+
+            /**************************** Content */
+            $Content = new \App\Models\Guide\GuideContent();
+
+            $sx .= '<div class="container"><div class="row">';
+            $sx .= $Content->show($id);
+            $sx .= $Content->btn_new($id);
+            $sx .= '</div></div>';
         } else {
             $sx .= 'Error';
         }
@@ -152,6 +160,7 @@ class GuideSection extends Model
         $data['sc_name'] = '';
         $data['sc_path'] = '';
         $data['id_sc'] = 0;
+        $data['sc_father'] = '';
 
         if ($d1 > 0) {
             $data = $this->find($d1);
