@@ -7,7 +7,7 @@ $session = \Config\Services::session();
 define("PATH", base_url());
 class Guide extends BaseController
 {
-    public function index($d1='', $d2 ='', $d3 = '')
+    public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
         $sx = view('Headers/header');
         $sx .= view('Headers/navbar');
@@ -16,6 +16,13 @@ class Guide extends BaseController
                 case 'guide':
                     switch($d2)
                         {
+                            /************************************************ Content */
+                            case 'content_edit':
+                                $GuideContent = new \App\Models\Guide\GuideContent();
+                                $sx = view('Headers/header');
+                                $sx .= $GuideContent->edit($d3,$d4);
+                                break;
+
                             case 'export':
                                 $HTML = new \App\Models\Guide\Templat\Templat01();
                                 $HTML->export();
@@ -53,7 +60,7 @@ class Guide extends BaseController
                                 //$sx .= view('Guide/contents');
                                 break;
                             default:
-                                $sx .= "HELLO $d1 $d2 $d3";
+                                $sx .= "HELLO $d1 $d2 $d3 $d4";
                                 break;
                         }
                         break;

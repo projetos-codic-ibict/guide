@@ -27,6 +27,10 @@ class GuideContent extends Migration
                 'type' => 'INT',
                 'null' => true,
             ],
+            'ct_seq' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
         ]);
         $this->forge->addKey('id_ct', true);
         $this->forge->addForeignKey('ct_section', 'guide_section', 'ct_seq');

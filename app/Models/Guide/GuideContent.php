@@ -8,7 +8,7 @@ class GuideContent extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'guide_content';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'id_ct';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
@@ -16,7 +16,7 @@ class GuideContent extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'id_ct', 'ct_title', 'ct_description',
-        'ct_section'
+        'ct_section','ct_seq'
     ];
 
     // Dates
@@ -45,62 +45,110 @@ class GuideContent extends Model
 
     function show($id)
         {
+            $sx = '';
             $dt = $this->where('ct_section',$id)->findAll();
-            print_r($dt);
+            for ($r=0;$r < count($dt);$r++)
+                {
+                    $sx .= '<div class="col-11">';
+                    $sx .= '<h3>'.$dt[$r]['ct_title'].'</h3>';
+                    $sx .= '<p>'.$dt[$r]['ct_description'].'</p>';
+                    $sx .= '</div>';
+
+                    $url = PATH . '/index/guide/content_edit/?id='.$dt[$r]['id_ct'];
+                    $sx .= '<div class="col-1">';
+                    $sx .= '<span class="btn btn-outline-secondary" onclick="newwin(\'' . $url . '\');">';
+                    $sx .= '[ED]';
+                    $sx .= '</span>';
+                    $sx .= '</div>';
+                }
+            return($sx);
         }
 
     function btn_new($id)
     {
+        $url = PATH.'/index/guide/content_edit/'.$id.'?id=0';
         $sx = '';
-        $sx .= '<script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>';
-        $sx .= '<script type="text/javascript">';
-        $sx .= 'bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });';
-        $sx .= '</script>';
-        $sx .= '<div class="col-11">';
-        $sx .= '</div>';
 
-        $sx .= '<div class="col-1">';
-        $sx .= '<span class="btn btn-outline-secondary">';
-        $sx .= '[+]';
+        $sx .= '<div class="col-12">';
+        $sx .= '<span class="btn btn-outline-secondary" onclick="newwin(\''.$url.'\');">';
+        $sx .= '[novo texto]';
         $sx .= '</span>';
         $sx .= '</div>';
 
-        $sx .= form_open();
-        $sx .= '<div class="col-12">';
-        $sx .= '<small>Sub-titulo (opcional)</small>';
-        $sx .= '<input type="text" name="ct_title" class="form-control">';
-        $sx .= '<small>Concetúdo</small>';
-        $sx .= '<textarea class="form-control" id="editor1" name="editor1" rows="10" cols="80" style=""></textarea>';
-
-        $sx .= '<br/>';
-        $sx .= '<input type="submit" class="btn btn-outline-secondary" value="Gravar"/>';
-        $sx .= '</div>';
-        $sx .= form_close();
-
-        $sx .= $this->tabs();
-
-        $sx .= '<script>';
-        $sx .= 'function save_html() {';
-        $sx .= ' alert("HELLO - HTML");';
-        $sx .= '}';
-        $sx .= '</script>';
         return $sx;
     }
 
-    function tabs()
-        {
-            $sx = '
-                <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">HTML</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">CODE</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">IMAGE</a>
-                </li>
-                </ul>';
-            return $sx;
+    function store()
+    {
+        $request = \Config\Services::request();
+        $validation =  \Config\Services::validation();
+        $data = array();
+
+        if ($request->getMethod() == "post") {
+            $data = $request->getPost();
+
+            /********************************* RULES */
+            $rules = [
+                'ct_title' => ['label' => 'Title', 'rules' => 'required|min_length[3]'],
+                'ct_description' => ['label' => 'Content', 'rules' => 'required|min_length[3]'],
+                'ct_section' => ['label' => 'Section', 'rules' => 'required|numeric|max_length[5]'],
+                'ct_seq' => ['label' => 'Section', 'rules' => 'required|numeric|max_length[5]']
+            ];
+            //$validation->setRule('sc_name', 'Username', 'required|min_length[3]');
+            $validation->setRules($rules);
+
+            if ($validation->withRequest($request)->run()) {
+                $data = [
+                    'ct_title' => $request->getVar('ct_title'),
+                    'ct_description'  => $request->getVar('ct_description'),
+                    'ct_section'  => $request->getVar('ct_section'),
+                    'ct_seq'  => $request->getVar('ct_seq')
+                ];
+
+                $id_ct = $request->getVar('id_ct');
+                if ($id_ct == 0) {
+                    $this->save($data);
+                } else {
+                    $this->set($data)->where('id_ct', $id_ct)->update();
+                }
+
+                echo '<script>wclose9);</script>';
+                exit;
+            } else {
+                $data['id_ct'] = $request->getVar('id_ct');
+                $data['ERROS'] = $validation->getErrors();
+                $data['validation'] = $this->validator;
+                print_r($data);
+                return view('Guide/content_textarea_edit', $data);
+            }
         }
+    }
+
+    function edit($d1 = 0)
+    {
+        $validation = \Config\Services::validation();
+        $request = \Config\Services::request();
+
+        $id = $request->getVar('id');
+
+        $data = array();
+        $data['validation'] = array();
+        $data['id_ct'] = $id;
+        $data['ct_title'] = '';
+        $data['ct_description'] = '';
+        $data['ct_section'] = $d1;
+        $data['ct_seq'] = 0;
+
+        if ($id > 0) {
+            $data = $this->find($d1);
+        }
+
+        $this->store();
+
+        return view('Guide/content_textarea_edit', $data);
+
+        $dt['data'] = $this->find(round('0' . $d1));
+        $sx = view('Guide/content_edit', $dt);
+        return $sx;
+    }
 }
