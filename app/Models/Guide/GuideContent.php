@@ -50,7 +50,7 @@ class GuideContent extends Model
             for ($r=0;$r < count($dt);$r++)
                 {
                     $sx .= '<div class="col-11">';
-                    $sx .= '<h3>'.$dt[$r]['ct_title'].'</h3>';
+                    $sx .= '<h5>'.$dt[$r]['ct_title'].'</h5>';
                     $sx .= '<p>'.$dt[$r]['ct_description'].'</p>';
                     $sx .= '</div>';
 
@@ -64,13 +64,27 @@ class GuideContent extends Model
             return($sx);
         }
 
-    function btn_new($id)
+    function btn_new_text($id)
     {
         $url = PATH.'/index/guide/content_edit/'.$id.'?id=0';
         $sx = '';
 
         $sx .= '<div class="col-12">';
         $sx .= '<span class="btn btn-outline-secondary" onclick="newwin(\''.$url.'\');">';
+        $sx .= '[novo texto]';
+        $sx .= '</span>';
+        $sx .= '</div>';
+
+        return $sx;
+    }
+
+    function btn_new_code($id)
+    {
+        $url = PATH . '/index/guide/content_edit/' . $id . '?id=0';
+        $sx = '';
+
+        $sx .= '<div class="col-12">';
+        $sx .= '<span class="btn btn-outline-secondary" onclick="newwin(\'' . $url . '\');">';
         $sx .= '[novo texto]';
         $sx .= '</span>';
         $sx .= '</div>';
@@ -112,13 +126,12 @@ class GuideContent extends Model
                     $this->set($data)->where('id_ct', $id_ct)->update();
                 }
 
-                echo '<script>wclose9);</script>';
+                echo '<script>   window.opener.location.reload(); close();  </script>';
                 exit;
             } else {
                 $data['id_ct'] = $request->getVar('id_ct');
                 $data['ERROS'] = $validation->getErrors();
                 $data['validation'] = $this->validator;
-                print_r($data);
                 return view('Guide/content_textarea_edit', $data);
             }
         }
@@ -140,7 +153,7 @@ class GuideContent extends Model
         $data['ct_seq'] = 0;
 
         if ($id > 0) {
-            $data = $this->find($d1);
+            $data = $this->find($id);
         }
 
         $this->store();
