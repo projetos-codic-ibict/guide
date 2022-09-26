@@ -64,6 +64,14 @@ class GuideContent extends Model
             return($sx);
         }
 
+    function btn_new($id)
+        {
+            $sx = '';
+            $sx .= $this->btn_new_text($id);
+            $sx .= $this->btn_new_code($id);
+            return $sx;
+        }
+
     function btn_new_text($id)
     {
         $url = PATH.'/index/guide/content_edit/'.$id.'?id=0';
