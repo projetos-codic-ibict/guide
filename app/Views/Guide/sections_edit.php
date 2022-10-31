@@ -1,78 +1,34 @@
-<?php
-$link = 'sections_edit?id=' . $id_sc;
-if ($id_sc == 0)
-    {
-        $link = 'createsecao';
-    }
-?>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="mt-5">Adicionar Seção</h2>
-            <p>Preencher para inserir nova seção no banco.</p>
-            <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
-            <script type="text/javascript">
-                bkLib.onDomLoaded(function() {
-                    nicEditors.allTextAreas()
-                });
-            </script>
-            <?= form_open(PATH . '/index/guide/'.$link) ?>
-            <?= form_hidden('id_sc', $id_sc); ?>
-            <div class="form-group">
-                <label>Ordem</label>
-                <?php
-                $options = array();
-                for ($r = 1; $r < 100; $r++) {
-                    $options[$r] = $r;
-                }
-                echo form_dropdown(array('name' => 'sc_seq', 'selected' => $sc_seq, 'class' => 'form-control', 'options' => $options, 'value' => $sc_seq));
-                ?>
-                <?php if (isset($ERROS['sc_seq'])) { ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?= $ERROS['sc_seq'] ?>
-                    </div>
-                <?php } ?>
-            </div>
+<input type="hidden" name="id_sc" id="id_sc" value="<?= $id_sc; ?>">
+<input type="hidden" name="sc_project" id="sc_project" value="<?= $sc_project; ?>">
+<input type="hidden" name="sc_order" id="sc_order" value="<?= $sc_order; ?>">
+<input type="hidden" name="sc_path" id="sc_path" value="<?= $sc_path; ?>">
+<input type="hidden" name="sc_project" id="sc_project" value="<?= $sc_project; ?>">
+<table width="100%">
+    <tr>
+        <td class="small"><?= lang('guide.section_name'); ?></td>
+    </tr>
 
-            <div class="form-group">
-                <label>Father Class</label>
-                <?php
-                $Sections = new \App\Models\Guide\GuideSection();
-                $ds = $Sections->where('sc_father', null)->Orwhere('sc_father', 0)->findAll();
-                $options = array();
-                $options[''] = 'Selecione';
-                for ($r = 0; $r < count($ds); $r++) {
-                    $line = $ds[$r];
-                    $options[$line['id_sc']] = $line['sc_name'];
-                }
-                echo form_dropdown(array('name' => 'sc_father', 'class' => 'form-control', 'selected'=>$sc_father ,'options' => $options, 'value' => $sc_father));
-                ?>
-                <?php if (isset($ERROS['sc_seq'])) { ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?= $ERROS['sc_seq'] ?>
-                    </div>
-                <?php } ?>
-            </div>
+    <tr>
+        <!-- SECTION NAME -->
+        <td colspan="2">
+            <input type="text" name="sc_name" style="width: 100%;" id="sc_name" class="form-control" value="<?php echo $sc_name; ?>">
+        </td>
+    </tr>
 
-            <span class="label">Nome da Seção</span>
-            <?= form_input(array('name' => 'sc_name', 'class' => 'form-control', 'value' => $sc_name)); ?>
-            <?php if (isset($ERROS['sc_name'])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $ERROS['sc_name'] ?>
-                </div>
-            <?php } ?>
+    <tr>
+        <td class="small"><?= lang('guide.section_path'); ?></td>
+    </tr>
 
-            <span class="label">Caminho da Seção (Dataverse Guide)</span>
-            <?= form_input(array('name' => 'sc_path', 'class' => 'form-control', 'value' => $sc_path)); ?>
-            <?php if (isset($ERROS['sc_path'])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $ERROS['sc_path'] ?>
-                </div>
-            <?php } ?>
-            <br/>
-            <input type="submit" class="btn btn-primary" value="Salvar">
-            <a href="<?= PATH . '/index/guide/sections'; ?>" class="btn btn-secondary ml-2">Cancelar</a>
-            </form>
-        </div>
-    </div>
-</div>
+    <tr>
+        <!-- SECTION PATH -->
+        <td colspan="2">
+            <input type="text" name="sc_path" style="width: 100%;" id="sc_path" class="form-control" value="<?php echo $sc_path; ?>">
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <button type="submit" class="btn btn-outline-primary supersmall" onclick="section_save();"><?= msg('guide.save'); ?></button>
+        </td>
+    </tr>
+</table>

@@ -2,20 +2,78 @@
 
 namespace App\Controllers;
 
+$this->session = \Config\Services::session();
+$language = \Config\Services::language();
+
 helper(['boostrap', 'url', 'sisdoc_forms', 'form', 'nbr', 'sessions', 'cookie']);
-$session = \Config\Services::session();
 define("PATH", base_url());
+define("URL", base_url());
+define("MODULE",'');
+define("COLLECTION", '');
+
 class Guide extends BaseController
 {
+    public function socials($d1='',$d2='',$d3='',$d4='',$d5='')
+        {
+            $cmd = get("cmd");
+            if ($cmd != '') { $d1 = $cmd; }
+            $Socials = new \App\Models\Socials();
+            $sx = $Socials->index($d1,$d2,$d3,$d4,$d5);
+            return $sx;
+        }
+
+    public function ajax($d1='',$d2='',$d3='',$d4='',$d5='')
+        {
+            switch($d1)
+                {
+                    case 'section':
+                        $GuideSection = new \App\Models\Guide\GuideSection();
+                        $GuideSection->ajax($d2,$d3,$d4,$d5);
+                        break;
+                    default:
+                        pre($_POST, false);
+                        pre($_GET, false);
+                        echo h('GUIDE AJAX');
+                        echo "<pre>
+                        d1 = $d1
+                        d2 = $d2
+                        d3 = $d3
+                        d4 = $d4
+                        d5 = $d5
+                        </pre>";
+                        break;
+                }
+        }
     public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
+        $Socials = new \App\Models\Socials();
+
         $sx = view('Headers/header');
         $sx .= view('Headers/navbar');
+        $user = $Socials->getuser();
+
+        if ($user == 0)
+            {
+                $d1 = 'login';
+            }
+
         switch($d1)
             {
+                case 'social':
+                    echo "OK";
+                    exit;
+                case 'login':
+                    $data['login'] = $Socials->login();
+                    $sx = view('Headers/header');
+                    $sx .= view('Guide/login',$data);
+                    break;
                 case 'guide':
                     switch($d2)
                         {
+                            case 'project':
+                                $project = new \App\Models\Guide\GuideProject();
+                                $sx .= $project->index($d2,$d3,$d4);
+                                break;
                             /************************************************ Content */
                             case 'content_edit':
                                 $GuideContent = new \App\Models\Guide\GuideContent();
@@ -65,7 +123,11 @@ class Guide extends BaseController
                         }
                         break;
                 default:
-                return view('welcome_message');
+                $GuideProject = new \App\Models\Guide\GuideProject();
+                $data = array();
+                $data['projects'] = $GuideProject->projects();
+                $sx .= view('drashboard',$data);
+                return $sx;
             }
         return $sx;
     }

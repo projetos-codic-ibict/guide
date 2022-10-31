@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class GuideContent extends Migration
 {
@@ -14,6 +15,10 @@ class GuideContent extends Migration
                 'constraint'     => 5,
                 'unsigned'       => true,
                 'auto_increment' => true,
+            ],
+            'ct_type' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '5',
             ],
             'ct_title' => [
                 'type'       => 'VARCHAR',
@@ -29,6 +34,14 @@ class GuideContent extends Migration
             ],
             'ct_seq' => [
                 'type' => 'INT',
+                'null' => true,
+            ],
+            'created_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'updated_at' => [
+                'type'       => 'TIMESTAMP',
                 'null' => true,
             ],
         ]);
