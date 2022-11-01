@@ -45,6 +45,7 @@ class GuideSection extends Model
     function ajax($d1, $d2, $d3, $d4)
     {
         $sx = '';
+        echo "$d1 - $d2 - $d3 - $d4";
         switch ($d1) {
             case 'ajax_block_edit_type':
                 echo $this->ajax_block_new_type($d2, $d3, $d4);
@@ -90,27 +91,40 @@ class GuideSection extends Model
     function type()
     {
         $tp = array(
+            'title' =>'header',
             'text' => 'text',
             //'code'=>'code',
             'image' => 'img',
             //'table'=>'table',
             //'list'=>'list',
             'link' => 'url',
-            //'video'=>'video',
+            'video'=>'video',
             //'audio'=>'audio',
             //'file'=>'file'
         );
         return $tp;
     }
 
-    function ajax_block_new_type($sec,$ord)
+    function ajax_block_new_type($sec,$ord,$type)
         {
             $type = get("type");
             $GuideContent = new \App\Models\Guide\GuideContent();
             $content = '';
             $data['ct_title'] = lang('guide.add_content_'.$type);
+            /* Se LINK */
+            if ($type == 'link') {
+                $data['ct_title'] = 'https://:::';
+            }
             $data['ct_type'] = $type;
             $data['ct_description'] = '';
+            /* Se Texto */
+            if ($type == 'text') { $data['ct_description'] = $data['ct_title']; }
+
+            /* Se Video */
+            if ($type == 'video') {
+                $data['ct_title'] = 'https://www.youtube.com/embed/7LNBd_7KmD4';
+                $data['ct_description'] = 0;
+            }
             $data['ct_section'] = $sec;
             $data['ct_seq'] = ($sec+1);
             $data['updated_at'] = date("Y-m-d H:i:s");

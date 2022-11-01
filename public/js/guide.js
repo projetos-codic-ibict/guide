@@ -19,6 +19,22 @@ function newwin($url,x=800,y=800)
     void(0);
 }
 
+function block_save(id,$frame)
+  {
+    var vlr = $("#ct_title_"+id).val();
+    var vlr2 = $("#ct_description_" + id).val();
+    var data = { vlr: vlr, vlr2: vlr2 };
+      $.post($path + "/ajax/block/save/" + id, data, function (data) {
+        $("#" + $frame).html(data);
+      });
+    //$("#"+$frame).load($path + "/ajax/block/view/" + id);
+  }
+
+
+function block_edit(id, frame) {
+  $("#" + frame).load($path + "/ajax/block/edit/" + id + "/" + frame);
+}
+
 function section_edit(id,frame)
   {
     $("#"+frame).load($path + "/ajax/section/edit/"+id);
@@ -34,6 +50,18 @@ function new_section_type($sec, $ord, $type) {
   $("#block_edit").load(
     $path + "/ajax/section/ajax_block_edit_type/" + $sec + "/" + $ord + '?type=' + $type
   );
+}
+
+function close_field(id, frame) {
+  $("#" + frame).load($path + "/ajax/block/ajax_block_view/" + id);
+}
+
+function delete_field(id, frame) {
+ if (isExecuted = confirm("Exclusion?"))
+  {
+    $("#" + frame).load($path + "/ajax/block/ajax_block_delete/" + id);
+  }
+
 }
 
 function section_view($id,$frame)

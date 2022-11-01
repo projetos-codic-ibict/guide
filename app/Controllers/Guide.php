@@ -26,6 +26,10 @@ class Guide extends BaseController
         {
             switch($d1)
                 {
+                    case 'block':
+                        $GuideContent = new \App\Models\Guide\GuideContent();
+                        $GuideContent->ajax($d2,$d3,$d4,$d5);
+                        break;
                     case 'section':
                         $GuideSection = new \App\Models\Guide\GuideSection();
                         $GuideSection->ajax($d2,$d3,$d4,$d5);
@@ -66,6 +70,7 @@ class Guide extends BaseController
                     $data['login'] = $Socials->login();
                     $sx = view('Headers/header');
                     $sx .= view('Guide/login',$data);
+                    return $sx;
                     break;
                 case 'guide':
                     switch($d2)
@@ -129,6 +134,7 @@ class Guide extends BaseController
                 $sx .= view('drashboard',$data);
                 return $sx;
             }
+        $sx .= view('Headers/footer');
         return $sx;
     }
 }
