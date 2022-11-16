@@ -49,6 +49,9 @@ $routes->get('/guide/(:any)/(:any)', 'Guide::$1/$2');
 $routes->post('/(:any)', 'Guide::$1');
 $routes->post('/guide/(:any)/(:any)', 'Guide::$1/$2');
 
+$routes->post('/admin/(:any)', 'Guide::admin/$1');
+$routes->post('/admin/(:any)/(:any)', 'Guide::/admin/$1/$2');
+
 
 
 $routes->get('/', 'Guide::index');
