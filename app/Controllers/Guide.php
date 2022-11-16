@@ -48,7 +48,16 @@ class Guide extends BaseController
                         break;
                 }
         }
-    public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
+    public function index($d1='',$d2='',$d3='',$d4='',$d5='')
+        {
+            $thema = 'Laion';
+            $sx = view('Headers/header');
+            $data['menu'] = 'MENU';
+            $data['content'] = 'CONTEÚDO';
+            $sx .= view('Theme/'.$thema.'/index',$data);
+            return $sx;
+        }
+    public function admin($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
         $Socials = new \App\Models\Socials();
 
