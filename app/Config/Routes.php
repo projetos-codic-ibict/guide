@@ -43,16 +43,14 @@ $routes->get('/social/(:any)', 'Guide::socials/$1');
 $routes->post('/social/(:any)', 'Guide::socials/$1');
 $routes->get('/social/', 'Guide::socials');
 
-$routes->get('/(:any)', 'Guide::$1');
-$routes->get('/guide/(:any)/(:any)', 'Guide::$1/$2');
 
-$routes->post('/(:any)', 'Guide::$1');
-$routes->post('/guide/(:any)/(:any)', 'Guide::$1/$2');
-
-$routes->post('/admin/(:any)', 'Guide::admin/$1');
+$routes->post('/admin/', 'Guide::admin/');
 $routes->post('/admin/(:any)/(:any)', 'Guide::/admin/$1/$2');
 
-
+$routes->get('/(:any)', 'Guide::$1');
+$routes->get('/guide/(:any)/(:any)', 'Guide::$1/$2');
+$routes->post('/(:any)', 'Guide::$1');
+$routes->post('/guide/(:any)/(:any)', 'Guide::$1/$2');
 
 $routes->get('/', 'Guide::index');
 
