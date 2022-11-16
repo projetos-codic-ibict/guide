@@ -57,6 +57,7 @@ class Guide extends BaseController
             $sx .= view('Theme/'.$thema.'/index',$data);
             return $sx;
         }
+
     public function admin($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
         $Socials = new \App\Models\Socials();

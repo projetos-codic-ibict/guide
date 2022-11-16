@@ -44,6 +44,7 @@ $routes->post('/social/(:any)', 'Guide::socials/$1');
 $routes->get('/social/', 'Guide::socials');
 
 
+$routes->post('/guide/admin/', 'Guide::admin/');
 $routes->post('/admin/', 'Guide::admin/');
 $routes->post('/admin/(:any)/(:any)', 'Guide::/admin/$1/$2');
 
