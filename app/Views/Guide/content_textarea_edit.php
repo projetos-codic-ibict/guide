@@ -12,7 +12,7 @@ $link = 'content_edit?id=' . $id_ct;
                     nicEditors.allTextAreas()
                 });
             </script>
-            <?= form_open(PATH . '/index/guide/'.$link) ?>
+            <?= form_open(PATH . '/guide/'.$link) ?>
 
             <?= form_hidden('id_ct', $id_ct); ?>
 
@@ -69,7 +69,7 @@ $link = 'content_edit?id=' . $id_ct;
             <?php } ?>
             <br/>
             <input type="submit" class="btn btn-primary" value="Salvar">
-            <a href="<?= PATH . '/index/guide/sections'; ?>" class="btn btn-secondary ml-2">Cancelar</a>
+            <a href="<?= PATH . '/guide/sections'; ?>" class="btn btn-secondary ml-2">Cancelar</a>
             </form>
         </div>
     </div>

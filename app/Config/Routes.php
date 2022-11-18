@@ -36,25 +36,38 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
+$routes->get('/guide', 'Guide::index');
+
+$routes->get('/admin/(:any)', 'Guide::index/$1');
+$routes->get('/admin/', 'Guide::index/');
+$routes->post('/admin/(:any)', 'Guide::index/$1');
+
 $routes->get('/ajax/(:any)', 'Guide::ajax/$1');
 $routes->post('/ajax/(:any)', 'Guide::ajax/$1');
 
 $routes->get('/social/(:any)', 'Guide::socials/$1');
 $routes->post('/social/(:any)', 'Guide::socials/$1');
-$routes->get('/social/', 'Guide::socials');
+
+$routes->get('/(:any)', 'Index');
+
+
+
+/*
+
+
 
 
 $routes->post('/guide/admin/', 'Guide::admin/');
 $routes->post('/admin/', 'Guide::admin/');
 $routes->post('/admin/(:any)/(:any)', 'Guide::/admin/$1/$2');
 
-$routes->get('/(:any)', 'Guide::$1');
+
 $routes->get('/guide/(:any)/(:any)', 'Guide::$1/$2');
 $routes->post('/(:any)', 'Guide::$1');
 $routes->post('/guide/(:any)/(:any)', 'Guide::$1/$2');
 
 $routes->get('/', 'Guide::index');
-
+*/
 
 /*
  * --------------------------------------------------------------------

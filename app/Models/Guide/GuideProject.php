@@ -49,8 +49,8 @@ class GuideProject extends Model
 
     function index($d1,$d2,$d3)
         {
-            $this->path = PATH . MODULE . '/index/guide/project/';
-            $this->path_back = PATH . MODULE . '/index/guide/project/';
+            $this->path = PATH . MODULE . '/guide/project/';
+            $this->path_back = PATH . MODULE . '/guide/project/';
             $sx = '';
             switch($d2)
                 {
@@ -146,7 +146,7 @@ class GuideProject extends Model
                 <div class="card-body">
                     <h5 class="card-title">'. $line['pj_name'].'</h5>
                     <p class="card-text">'.$line['pj_desc'].'</p>
-                    <a href="'.PATH.'/index/guide/project/selected/'.$line['id_pj'].'" class="btn btn-primary">'.lang('guide.go_project').'</a>
+                    <a href="'.PATH.MODULE.'/guide/project/selected/'.$line['id_pj'].'" class="btn btn-primary">'.lang('guide.go_project').'</a>
                 </div>
                 </div>
                 ';

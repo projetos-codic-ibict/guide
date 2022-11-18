@@ -37,6 +37,7 @@ function block_edit(id, frame) {
 
 function section_edit(id,frame)
   {
+    alert($path + "/ajax/section/edit/" + id);
     $("#"+frame).load($path + "/ajax/section/edit/"+id);
   }
 

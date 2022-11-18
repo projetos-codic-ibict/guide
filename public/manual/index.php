@@ -16,11 +16,11 @@ $http = 'https://lattesdata.cnpq.br/';
 
 <body>
   <?php
-  /* require("index_header.php"); */
+  require("index_header.php");
   ?>
 
   <!------ Include the above in your HEAD tag ---------->
-  <div class="container-fluid">
+  <div class="container-fluid" style="margin-top: 90px;">
     <div class="row">
       <div class="col-2 position-fixed " style="height: 100%;">
         <?php require("index_menu.php"); ?>

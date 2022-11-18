@@ -8,8 +8,8 @@ $language = \Config\Services::language();
 helper(['boostrap', 'url', 'sisdoc_forms', 'form', 'nbr', 'sessions', 'cookie']);
 define("PATH", base_url());
 define("URL", base_url());
-define("MODULE",'');
-define("COLLECTION", '');
+define("MODULE", '/admin');
+define("COLLECTION", '/admin');
 
 class Guide extends BaseController
 {
@@ -24,6 +24,8 @@ class Guide extends BaseController
 
     public function ajax($d1='',$d2='',$d3='',$d4='',$d5='')
         {
+            echo "$d1 - $d2 - $d3 - $d4 - $d5";
+            //exit;
             switch($d1)
                 {
                     case 'block':
@@ -48,19 +50,10 @@ class Guide extends BaseController
                         break;
                 }
         }
-    public function index($d1='',$d2='',$d3='',$d4='',$d5='')
-        {
-            $thema = 'Laion';
-            $sx = view('Headers/header');
-            $data['menu'] = 'MENU';
-            $data['content'] = 'CONTEÚDO';
-            $sx .= view('Theme/'.$thema.'/index',$data);
-            return $sx;
-        }
-
-    public function admin($d1='', $d2 ='', $d3 ='', $d4 = '')
+    public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
         $Socials = new \App\Models\Socials();
+        $project = new \App\Models\Guide\GuideProject();
 
         $sx = view('Headers/header');
         $sx .= view('Headers/navbar');
@@ -70,6 +63,7 @@ class Guide extends BaseController
             {
                 $d1 = 'login';
             }
+
 
         switch($d1)
             {
@@ -85,8 +79,7 @@ class Guide extends BaseController
                 case 'guide':
                     switch($d2)
                         {
-                            case 'project':
-                                $project = new \App\Models\Guide\GuideProject();
+                            default:
                                 $sx .= $project->index($d2,$d3,$d4);
                                 break;
                             /************************************************ Content */
@@ -132,17 +125,15 @@ class Guide extends BaseController
                             case 'contents':
                                 //$sx .= view('Guide/contents');
                                 break;
-                            default:
-                                $sx .= "HELLO $d1 $d2 $d3 $d4";
-                                break;
                         }
                         break;
                 default:
-                $GuideProject = new \App\Models\Guide\GuideProject();
-                $data = array();
-                $data['projects'] = $GuideProject->projects();
-                $sx .= view('drashboard',$data);
-                return $sx;
+                    $GuideProject = new \App\Models\Guide\GuideProject();
+                    $data = array();
+                    $data['projects'] = $GuideProject->projects();
+                    $sx .= $project->index($d2, $d3, $d4);
+                    $sx .= 'XXXXXXXXXXXXXXXXXX';
+                    break;
             }
         $sx .= view('Headers/footer');
         return $sx;
