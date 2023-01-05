@@ -42,7 +42,7 @@ class Index extends Model
 
     function index($d1,$d2,$d3,$d4)
         {
-            $sx = "";
+            $sx = "XXXXXX $d1 - $d2";
 
             switch($d1)
                 {
@@ -57,6 +57,12 @@ class Index extends Model
                     case 'section':
                         $GuideSection = new \App\Models\Guide\GuideSection();
                         $sx .= $GuideSection->index($d2, $d3, $d4);
+                        break;
+                    case 'project':
+                        echo "OK";
+                        exit;
+                        $GuideProject = new \App\Models\Guide\GuideProject();
+                        $sx .= $GuideProject->index($d2, $d3, $d4);
                         break;
                     case 'vars':
                         $GuideVariables = new \App\Models\Guide\GuideVariables();

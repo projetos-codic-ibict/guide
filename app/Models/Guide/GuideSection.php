@@ -82,7 +82,7 @@ class GuideSection extends Model
                         gs.sc_path as sc_father_name')
             ->join('guide_section as gs', 'guide_section.sc_father = gs.id_sc', 'left')
             ->findAll();
-        $sx = view('Guide/sections_list', $dt);
+        $sx = bs(view('Guide/sections_list', $dt));
         return $sx;
     }
 

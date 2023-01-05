@@ -46,18 +46,18 @@ class GuideProject extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    var $path = PATH .  '/admin/guide/';
+    var $path_back = PATH . '/admin/guide/';
 
     var $id = 0;
 
     function index($d1,$d2,$d3)
         {
-            $this->path = PATH .  '/admin/guide/';
-            $this->path_back = PATH . '/admin/guide/';
             $sx = '';
             switch($d1)
                 {
                     case 'selected':
-                        $sx .= $this->selected($d2);
+                        $this->selected($d2);
                         $sx .= $this->viewid($d2);
                         break;
                     case 'viewid':
@@ -75,6 +75,11 @@ class GuideProject extends Model
                 }
                 $sx = bs($sx);
             return $sx;
+        }
+
+    function view_guide($id)
+        {
+            echo "==>".$id;
         }
 
     function le($d3)
@@ -107,21 +112,21 @@ class GuideProject extends Model
             return $id;
         }
 
-    function viewid($d3)
+    function viewid($prj)
         {
             $GuideSection = new \App\Models\Guide\GuideSection();
 
-            $dt = $this->le($d3);
+            $dt = $this->le($prj);
+            $sx = $this->header($dt);
+
             $sa = '';
-            $sa .= $GuideSection->summary($d3);
-            $sa .= $GuideSection->btn_new_section($d3);
+            $sa .= $GuideSection->summary($prj);
+            $sa .= $GuideSection->btn_new_section($prj);
 
-            $sb = '<div id="guide_content">Welcome GuideMaker</div>';
-
+            $sb = '';
             $sa = bsc($sa,4).cr();
             $sb = bsc($sb,6).cr();
-            $sx = $this->header($dt);
-            $sx .= bs($sa.$sb);
+
             return $sx;
         }
 
@@ -129,7 +134,7 @@ class GuideProject extends Model
         {
             $data['guide_project'] = $id;
             $_SESSION['guide_pj'] = $id;
-            return "";
+            redirect()->to('/admin/project/'.$id);
         }
 
     function btn_project_new()

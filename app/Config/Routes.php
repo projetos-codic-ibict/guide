@@ -50,7 +50,7 @@ $routes->post('/ajax/(:any)', 'Admin::ajax/$1');
 $routes->get('/social/(:any)', 'Admin::socials/$1');
 $routes->post('/social/(:any)', 'Admin::socials/$1');
 
-$routes->get('/(:any)', 'Guide::index');
+$routes->get('/(:any)', 'Guide::index/$1');
 
 
 

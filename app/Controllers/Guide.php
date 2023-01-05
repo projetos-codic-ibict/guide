@@ -28,87 +28,20 @@ class Guide extends BaseController
         $Socials = new \App\Models\Socials();
         $project = new \App\Models\Guide\GuideProject();
 
+        $dt = $project->where('pj_path',$d1)->first();
+        if ($dt == '')
+            {
+                echo "ERRO DE ACESSO AO GUIA";
+                exit;
+            }
+
+        $prj = $dt['id_pj'];
+
         $sx = view('Headers/header');
+        $sb = $project->view_guide($d2,$d3,$d4);
         $sx .= view('Headers/navbar');
         $user = $Socials->getuser();
 
-        if ($user == 0)
-            {
-                $d1 = 'login';
-            }
-
-
-        switch($d1)
-            {
-                case 'social':
-                    echo "OK";
-                    exit;
-                case 'login':
-                    echo "d1=$d1,d2=$d2,d3=$d3,d4=$d4";
-                    $data['login'] = $Socials->index($d3,$d4);
-                    $sx = view('Headers/header');
-                    $sx .= view('Guide/login',$data);
-                    return $sx;
-                    break;
-                case 'guide':
-                    switch($d2)
-                        {
-                            default:
-                                $sx .= $project->index($d2,$d3,$d4);
-                                break;
-                            /************************************************ Content */
-                            case 'content_edit':
-                                $GuideContent = new \App\Models\Guide\GuideContent();
-                                $sx = view('Headers/header');
-                                $sx .= $GuideContent->edit($d3,$d4);
-                                break;
-
-                            case 'export':
-                                $HTML = new \App\Models\Guide\Templat\Templat01();
-                                $HTML->export();
-                                break;
-                            case '':
-                                //$sx .= view('Guide/index');
-                                break;
-
-                            case 'sections':
-                                $GuideSection = new \App\Models\Guide\GuideSection();
-                                $sx .= $GuideSection->index($d3);
-                                break;
-                            case 'createsecao':
-                                $GuideSection = new \App\Models\Guide\GuideSection();
-                                $sx .= $GuideSection->edit(0);
-                                break;
-                            case 'sections_delete':
-                                $GuideSection = new \App\Models\Guide\GuideSection();
-                                $sx .= $GuideSection->confirm_delete($d3);
-                                break;
-                            case 'sections_view':
-                                $GuideSection = new \App\Models\Guide\GuideSection();
-                                $sx .= $GuideSection->view($d3);
-                                break;
-
-                            case 'sections_edit':
-                                if (isset($_GET['id']))
-                                    {
-                                        $id = round($_GET['id']);
-                                        $GuideSection = new \App\Models\Guide\GuideSection();
-                                        $sx .= $GuideSection->edit($id);
-                                    }
-                                break;
-                            case 'contents':
-                                //$sx .= view('Guide/contents');
-                                break;
-                        }
-                        break;
-                default:
-                    $GuideProject = new \App\Models\Guide\GuideProject();
-                    $data = array();
-                    $data['projects'] = $GuideProject->projects();
-                    $sx .= $project->index($d2, $d3, $d4);
-                    $sx .= 'XXXXXXXXXXXXXXXXXX';
-                    break;
-            }
         $sx .= view('Headers/footer');
         return $sx;
     }
