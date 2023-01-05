@@ -9,7 +9,7 @@ helper(['boostrap', 'url', 'sisdoc_forms', 'form', 'nbr', 'sessions', 'cookie'])
 define("PATH", base_url());
 define("URL", base_url());
 define("MODULE", '/admin');
-define("COLLECTION", '/admin');
+define("COLLECTION", '/guide');
 
 class Guide extends BaseController
 {
@@ -22,34 +22,7 @@ class Guide extends BaseController
             return $sx;
         }
 
-    public function ajax($d1='',$d2='',$d3='',$d4='',$d5='')
-        {
-            echo "$d1 - $d2 - $d3 - $d4 - $d5";
-            //exit;
-            switch($d1)
-                {
-                    case 'block':
-                        $GuideContent = new \App\Models\Guide\GuideContent();
-                        $GuideContent->ajax($d2,$d3,$d4,$d5);
-                        break;
-                    case 'section':
-                        $GuideSection = new \App\Models\Guide\GuideSection();
-                        $GuideSection->ajax($d2,$d3,$d4,$d5);
-                        break;
-                    default:
-                        pre($_POST, false);
-                        pre($_GET, false);
-                        echo h('GUIDE AJAX');
-                        echo "<pre>
-                        d1 = $d1
-                        d2 = $d2
-                        d3 = $d3
-                        d4 = $d4
-                        d5 = $d5
-                        </pre>";
-                        break;
-                }
-        }
+
     public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
         $Socials = new \App\Models\Socials();
@@ -71,7 +44,8 @@ class Guide extends BaseController
                     echo "OK";
                     exit;
                 case 'login':
-                    $data['login'] = $Socials->login();
+                    echo "d1=$d1,d2=$d2,d3=$d3,d4=$d4";
+                    $data['login'] = $Socials->index($d3,$d4);
                     $sx = view('Headers/header');
                     $sx .= view('Guide/login',$data);
                     return $sx;

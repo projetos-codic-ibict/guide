@@ -5,26 +5,29 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class UsersLog extends Migration
+class GuideVariables extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_ul' => [
+            'id_v' => [
                 'type'           => 'INT',
                 'constraint'     => 5,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'ul_user' => [
+            'v_name' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '400',
             ],
-            'ul_ip' => [
+            'v_value' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '40',
+                'constraint' => '400',
             ],
-            'ul_access' => [
+            'v_pj' => [
+                'type'       => 'INT',
+            ],
+            'created_at' => [
                 'type'    => 'TIMESTAMP',
                 'default' => new RawSql('CURRENT_TIMESTAMP'),
             ],
@@ -32,13 +35,14 @@ class UsersLog extends Migration
                 'type'       => 'TIMESTAMP',
                 'null' => true,
             ],
+
         ]);
-        $this->forge->addKey('id_ul', true);
-       // $this->forge->createTable('users_log');
+        $this->forge->addKey('id_v', true);
+        $this->forge->createTable('guide_variables');
     }
 
     public function down()
     {
-        //$this->forge->dropTable('users_log');
+        $this->forge->dropTable('guide_variables');
     }
 }

@@ -17,6 +17,9 @@ class GuideSection extends Model
     protected $allowedFields    = [
         'id_sc', 'sc_name', 'sc_seq', 'sc_path', 'sc_father', 'sc_project', 'updated_at'
     ];
+    protected $typeFields    = [
+        'hidden', 'string', '[1-99]]', 'string', 'hidden', 'hidden', 'now'
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -41,6 +44,47 @@ class GuideSection extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    var $id = 0;
+    var $path = PATH. '/admin/section/';
+    var $path_back = PATH . '/admin/section/';
+
+
+    function index($d1 = '', $d2 = '', $d3 = '', $d4 = '')
+    {
+        $GuideProject = new \App\Models\Guide\GuideProject();
+        $prj = $GuideProject->getProject();
+        $sx = '';
+        switch ($d1) {
+            case 'edit':
+                $this->id = $d2;
+                echo '==>'.$d2;
+                $sx = form($this);
+                return $sx;
+            default:
+                if ($prj != '') {
+                    $dt = $GuideProject->le($prj);
+                    $sx .= $GuideProject->header($dt);
+                    $sx .= h(lang('guide.section'),4);
+                    $sx .= $this->list($d1);
+                    $sx .= $this->btn_new_section($prj);
+                }
+                break;
+        }
+        return $sx;
+    }
+
+    function list($d1, $d2 = '', $d3 = '', $d4 = '')
+    {
+        $dt['data'] = $this
+            ->select('guide_section.id_sc as id_sc, guide_section.sc_name as sc_name,
+                        guide_section.sc_seq as sc_seq, guide_section.sc_path as sc_path,
+                        guide_section.sc_father as sc_father,
+                        gs.sc_path as sc_father_name')
+            ->join('guide_section as gs', 'guide_section.sc_father = gs.id_sc', 'left')
+            ->findAll();
+        $sx = view('Guide/sections_list', $dt);
+        return $sx;
+    }
 
     function ajax($d1, $d2, $d3, $d4)
     {
@@ -91,48 +135,50 @@ class GuideSection extends Model
     function type()
     {
         $tp = array(
-            'title' =>'header',
+            'title' => 'header',
             'text' => 'text',
             //'code'=>'code',
             'image' => 'img',
             //'table'=>'table',
             //'list'=>'list',
             'link' => 'url',
-            'video'=>'video',
+            'video' => 'video',
             //'audio'=>'audio',
             //'file'=>'file'
         );
         return $tp;
     }
 
-    function ajax_block_new_type($sec,$ord,$type)
-        {
-            $type = get("type");
-            $GuideContent = new \App\Models\Guide\GuideContent();
-            $content = '';
-            $data['ct_title'] = lang('guide.add_content_'.$type);
-            /* Se LINK */
-            if ($type == 'link') {
-                $data['ct_title'] = 'https://:::';
-            }
-            $data['ct_type'] = $type;
-            $data['ct_description'] = '';
-            /* Se Texto */
-            if ($type == 'text') { $data['ct_description'] = $data['ct_title']; }
-
-            /* Se Video */
-            if ($type == 'video') {
-                $data['ct_title'] = 'https://www.youtube.com/embed/7LNBd_7KmD4';
-                $data['ct_description'] = 0;
-            }
-            $data['ct_section'] = $sec;
-            $data['ct_seq'] = ($sec+1);
-            $data['updated_at'] = date("Y-m-d H:i:s");
-            $idb = $GuideContent->set($data)->insert();
-
-            echo $GuideContent->edit_block($idb);
-            exit;
+    function ajax_block_new_type($sec, $ord, $type)
+    {
+        $type = get("type");
+        $GuideContent = new \App\Models\Guide\GuideContent();
+        $content = '';
+        $data['ct_title'] = lang('guide.add_content_' . $type);
+        /* Se LINK */
+        if ($type == 'link') {
+            $data['ct_title'] = 'https://:::';
         }
+        $data['ct_type'] = $type;
+        $data['ct_description'] = '';
+        /* Se Texto */
+        if ($type == 'text') {
+            $data['ct_description'] = $data['ct_title'];
+        }
+
+        /* Se Video */
+        if ($type == 'video') {
+            $data['ct_title'] = 'https://www.youtube.com/embed/7LNBd_7KmD4';
+            $data['ct_description'] = 0;
+        }
+        $data['ct_section'] = $sec;
+        $data['ct_seq'] = ($sec + 1);
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $idb = $GuideContent->set($data)->insert();
+
+        echo $GuideContent->edit_block($idb);
+        exit;
+    }
 
     function ajax_block_new($sec, $ord)
     {
@@ -228,26 +274,13 @@ class GuideSection extends Model
             $sx .= '<ul>' . cr();
             for ($r = 0; $r < count($dt); $r++) {
                 $line = $dt[$r];
-                $link = '<span style="cursor: pointer;" onclick="section_view(' . $line['id_sc'] . ',\'guide_content\');">';
-                $linka = '</span>' . cr();
+                $link = '<a href="' . PATH . '/admin/section/' . $line['id_sc'] . '">';
+                $linka = '</a>' . cr();
                 $sx .= '<li>' . $link . $line['sc_name'] . '</li>' . cr();
             }
             $sx .= '</ul>' . cr();
         }
         $sx .= '</div>' . cr();
-        return $sx;
-    }
-
-    function index($d1)
-    {
-        $dt['data'] = $this
-            ->select('guide_section.id_sc as id_sc, guide_section.sc_name as sc_name,
-                        guide_section.sc_seq as sc_seq, guide_section.sc_path as sc_path,
-                        guide_section.sc_father as sc_father,
-                        gs.sc_path as sc_father_name')
-            ->join('guide_section as gs', 'guide_section.sc_father = gs.id_sc', 'left')
-            ->findAll();
-        $sx = view('Guide/sections_list', $dt);
         return $sx;
     }
 

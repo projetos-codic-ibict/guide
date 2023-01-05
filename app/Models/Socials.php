@@ -113,9 +113,6 @@ class Socials extends Model
 			case 'session':
 				if ($_SERVER['CI_ENVIRONMENT'] == 'development') {
 					$id = 1;
-					echo '<pre>';
-					print_r($_SESSION);
-					echo '</pre>';
 					$newdata = [
 						'id'  => $id,
 						'email'     => 'Usuário Test (ADMIN)',
@@ -124,10 +121,6 @@ class Socials extends Model
 					];
 					$session = session();
 					$session->set($newdata);
-
-					echo '<pre>';
-					print_r($_SESSION);
-					echo '</pre>';
 				}
 				break;
 			case 'test':
@@ -272,46 +265,35 @@ class Socials extends Model
 		return $sx;
 	}
 
-	function admin($act,$od,$cab)
+	function admin($act, $od, $cab)
 	{
 		$sx = '';
-		switch($act)
-			{
-				case 'email_test':
-					$sx .= $this->admin_email_test();
-					break;
-				case 'email_config':
-					$sx .= $this->admin_email_config();
-					break;
-
-				default:
-					$menu = array();
-					$menu['#email'] = 'E-mail';
-					$menu[PATH . 'social/admin/email_config'] = 'E-mail - Configurações';
-					$menu[PATH . 'social/admin/email_test'] = 'E-mail - Teste';
-					$sx .= menu($menu);
+		switch ($act) {
+			case 'email_test':
+				$sx .= $this->admin_email_test();
 				break;
-			}
-			return $sx;
+			case 'email_config':
+				$sx .= $this->admin_email_config();
+				break;
+
+			default:
+				$menu = array();
+				$menu['#email'] = 'E-mail';
+				$menu[PATH . 'social/admin/email_config'] = 'E-mail - Configurações';
+				$menu[PATH . 'social/admin/email_test'] = 'E-mail - Teste';
+				$sx .= menu($menu);
+				break;
+		}
+		return $sx;
 	}
 
 	function admin_email_config()
-		{
-			$sx = '';
-			$type = getenv("email.type");
-			if ($type == '')
-				{
-					$sx .= bsmessage(lang('social.email_not_configured'));
-					return $sx;
-				}
-			$sx .= h(lang('social.email_config'),3);
-			$sx .= lang('social.email_method').': <b>'.$type. '</b><br>';
-			$sx .= lang('social.stmp') . ': <b>' . getenv("email.stmp"). '</b><br>';
-			$sx .= lang('social.stmp_port') . ': <b>' . getenv("email.stmp_port") . '</b><br>';
-			$sx .= lang('social.email_from') . ': <b>' . getenv("email.email_from")  . '</b><br>';
-			$sx .= lang('social.password') . ': <b>' . str_pad("", strlen(getenv("email.password")), "*")  . '</b><br>';
-			$sx .= lang('social.user_auth') . ': <b>' . getenv("email.user_auth")  . '</b><br>';
-			$sx .= '<hr>';
+	{
+		$sx = '';
+		$type = getenv("email.type");
+		if ($type == '') {
+			$sx .= bsmessage(lang('social.email_not_configured'));
+
 			$sx .= '<pre>
 			#--------------------------------------------------------------------
 			# E-MAIL
@@ -327,23 +309,45 @@ class Socials extends Model
 
 			return $sx;
 		}
+		$sx .= h(lang('social.email_config'), 3);
+		$sx .= lang('social.email_method') . ': <b>' . $type . '</b><br>';
+		$sx .= lang('social.stmp') . ': <b>' . getenv("email.stmp") . '</b><br>';
+		$sx .= lang('social.stmp_port') . ': <b>' . getenv("email.stmp_port") . '</b><br>';
+		$sx .= lang('social.email_from') . ': <b>' . getenv("email.email_from")  . '</b><br>';
+		$sx .= lang('social.password') . ': <b>' . str_pad("", strlen(getenv("email.password")), "*")  . '</b><br>';
+		$sx .= lang('social.user_auth') . ': <b>' . getenv("email.user_auth")  . '</b><br>';
+		$sx .= '<hr>';
+		$sx .= '<pre>
+			#--------------------------------------------------------------------
+			# E-MAIL
+			#--------------------------------------------------------------------
+			# options: sendmail, smtp
+			email.type = \'sendmail\'
+			email.stmp = \'\';
+			email.stmp_port = \'\';
+			email.email_from = \'\';
+			email.password = \'\';
+			email.user_auth = \'\';
+			</pre>';
+
+		return $sx;
+	}
 	function admin_email_test()
-		{
-			$sx = '';
-			$sx .= h('Email Test', 1);
-			$sx .= form_open(PATH.'social/admin/email_test');
-			$sx .= form_input(array('name'=>'email','class'=>'form-control', 'value' => get("email")),'',lang('social.email'));
-			$sx .= form_submit(array('class' => 'btn btn-primary'), 'Enviar');
-			$sx .= form_close();
+	{
+		$sx = '';
+		$sx .= h('Email Test', 1);
+		$sx .= form_open(PATH . 'social/admin/email_test');
+		$sx .= form_input(array('name' => 'email', 'class' => 'form-control', 'value' => get("email")), '', lang('social.email'));
+		$sx .= form_submit(array('class' => 'btn btn-primary'), 'Enviar');
+		$sx .= form_close();
 
-			$xemail = get("email");
+		$xemail = get("email");
 
-			if (strlen($xemail) > 0)
-				{
-					$sx .= sendemail($xemail, 'Teste de e-mail', 'Teste de e-mail');
-				}
-			return $sx;
+		if (strlen($xemail) > 0) {
+			$sx .= sendemail($xemail, 'Teste de e-mail', 'Teste de e-mail');
 		}
+		return $sx;
+	}
 
 	function menu($nivel = 0)
 	{
@@ -362,10 +366,10 @@ class Socials extends Model
 		return $sx;
 	}
 
-	function getUser($t='')
-		{
-			return $this->getID($t);
-		}
+	function getUser($t = '')
+	{
+		return $this->getID($t);
+	}
 	function getID($t = '')
 	{
 		if (isset($_SESSION['id'])) {
@@ -702,7 +706,11 @@ class Socials extends Model
 			$sx .= $this->perfil_show_header($dt);
 			$sx .= $this->my_library($dt);
 			$logs = $this->logs($id);
-			$rese = $this->my_reasearchs($id);
+			$rese = '';
+			if (function_exists("my_reasearchs"))
+				{
+					$rese = my_reasearchs($id);
+				}
 			$setings = $this->my_setings($id);
 			$sx .= bs(
 				bsc($setings, 4) .
@@ -934,26 +942,6 @@ class Socials extends Model
 	}
 
 
-	/*************************************************** RESEARSH */
-	function my_reasearchs($id)
-	{
-		$sx = '
-			<div class="card h-100">
-					<div class="card-header pb-0 p-3">
-						<h6 class="mb-0">' . lang('social.researchs_register') . '</h6>
-					</div>
-					<div class="card-body p-3">
-						<h6 class="text-uppercase text-body text-xs font-weight-bolder">' . lang('social.research') . '</h6>
-						<ul class="list-group">';
-		$sx .= '<li class="list-group-item border-0 px-0">' . lang('social.research_info') . '</li>';
-		$sx .= '
-						</ul>
-					</div>
-					</div>
-					';
-		return $sx;
-	}
-
 	/*************************************************** LOGS */
 
 	function log_insert($id)
@@ -1086,7 +1074,7 @@ class Socials extends Model
 		$user = get("user");
 		$pwd = get("pwd");
 		$dt = $this->user_exists($user);
-		pre($dt,false);
+
 		if (isset($dt[0])) {
 			if ($dt[0]['us_password'] == md5($pwd)) {
 				$_SESSION['id'] = $dt[0]['id_us'];
@@ -1110,141 +1098,134 @@ class Socials extends Model
 	}
 
 	function forgout()
-		{
-			$email = get("email");
-			$dt = $this->where('us_email',$email)->findAll();
+	{
+		$email = get("email");
+		$dt = $this->where('us_email', $email)->findAll();
 
-			if (count($dt) == 0)
-				{
-					$sx = '<h2>'.lang('Socials.email_not_found').'</h2>';
-					$sx .= '<span class="psw" onclick="showForgotPassword()">Voltar</span>';
-					echo $sx;
-					exit;
-				}
-			$sx = '<h2>' . lang('social.email_send_your_account') . '</h2>';
-			$sx .= '<span class="small">'.lang('social.forgout_info').'</span>';
-			$sx .= '<span class="psw" onclick="showLogin()()">'.lang('social.return_login').'</span>';
-
-			$user = $dt[0];
-			$email = $user['us_email'];
-
-			$key =  md5(date("YmdHis") . $email);
-			$_SESSION['forgout'] = $key;
-			$link = PATH . 'social/forgout/' . $user['id_us'] . '?key='.$key;
-			$link_html = '<a href="' . $link.'">' . lang('social.forgout_email_link') . '</a>';
-
-			/*********************************/
-			$txt = '<h1>'.lang('social.forgout_email_title').'</h1>';
-			$txt .= '<center>';
-			$txt .= '<table width="600" border=1>';
-			$txt .= '<tr><td style=" padding: 10px;">';
-			$txt .= '<h2>'.lang('social.forgout_email_user').'</h2>';
-			$txt .= '</td></tr>';
-
-			$txt .= '<tr><td cellpadding="5">';
-			$txt .= '<p>'.lang('social.forgout_email_text').'</p>';
-			$txt .= '<p>'.lang('social.forgout_email_user').': '.$user['us_nome'].'</p>';
-			$txt .= '<p>'.lang('social.forgout_email_email').': '.$user['us_email'].'</p>';
-			$txt .= '<p>'.lang('social.forgout_email_password').'</p>';
-			$txt .= '<p>'.$link.'</p>';
-			$txt .= '<p>'.lang('social.forgout_email_text2').'</p>';
-			$txt .= '<p>'.lang('social.forgout_email_text3').'</p>';
-			$txt .= '<p>'.lang('social.forgout_email_text4').'</p>';
-			$txt .= '</td></tr>';
-
-			$txt = troca($txt,'$link', $link_html);
-			$txt .= '</center>';
-			$subject = '['.getenv('app.ProjecName').'] '.lang('social.forgout_email_title');
-
-			sendmail($email,$subject,$txt);
-
-			return $sx;
-
+		if (count($dt) == 0) {
+			$sx = '<h2>' . lang('Socials.email_not_found') . '</h2>';
+			$sx .= '<span class="psw" onclick="showForgotPassword()">Voltar</span>';
+			echo $sx;
+			exit;
 		}
+		$sx = '<h2>' . lang('social.email_send_your_account') . '</h2>';
+		$sx .= '<span class="small">' . lang('social.forgout_info') . '</span>';
+		$sx .= '<span class="psw" onclick="showLogin()()">' . lang('social.return_login') . '</span>';
 
-	function forgout_form($d1='',$d2='')
-		{
-			$sx = '';
-			if (!isset($_SESSION['forgout']))
-				{
-					$sx = '<h2>'.lang('social.link_expired').'</h2>';
-					return $sx;
-				}
+		$user = $dt[0];
+		$email = $user['us_email'];
 
-			$dt = $this->find($d1);
-			$keys = $_SESSION['forgout'];
-			$keyf = get("key");
+		$key =  md5(date("YmdHis") . $email);
+		$_SESSION['forgout'] = $key;
+		$link = PATH . 'social/forgout/' . $user['id_us'] . '?key=' . $key;
+		$link_html = '<a href="' . $link . '">' . lang('social.forgout_email_link') . '</a>';
 
-			if ($keys != $keyf)
-				{
-					$sx = '<h2>'.lang('social.link_expired').'</h2>';
-					return $sx;
-				}
+		/*********************************/
+		$txt = '<h1>' . lang('social.forgout_email_title') . '</h1>';
+		$txt .= '<center>';
+		$txt .= '<table width="600" border=1>';
+		$txt .= '<tr><td style=" padding: 10px;">';
+		$txt .= '<h2>' . lang('social.forgout_email_user') . '</h2>';
+		$txt .= '</td></tr>';
 
-			/*********************************************** SAVE */
-			$check = '';
-			$pass1 = get("password");
-			$pass2 = get("password_confirm");
-			$erro = '';
+		$txt .= '<tr><td cellpadding="5">';
+		$txt .= '<p>' . lang('social.forgout_email_text') . '</p>';
+		$txt .= '<p>' . lang('social.forgout_email_user') . ': ' . $user['us_nome'] . '</p>';
+		$txt .= '<p>' . lang('social.forgout_email_email') . ': ' . $user['us_email'] . '</p>';
+		$txt .= '<p>' . lang('social.forgout_email_password') . '</p>';
+		$txt .= '<p>' . $link . '</p>';
+		$txt .= '<p>' . lang('social.forgout_email_text2') . '</p>';
+		$txt .= '<p>' . lang('social.forgout_email_text3') . '</p>';
+		$txt .= '<p>' . lang('social.forgout_email_text4') . '</p>';
+		$txt .= '</td></tr>';
 
-			if (strlen($pass1) > 0)
-				{
-					$erro = "";
-					/***************** Tamanho da senha */
-					if (strlen($pass1) < 6)
-						{
-							$erro .= ' '.lang('social.password_short').'.';
-						}
-					/***************** Senha de confirmação */
-					if ($pass1 != $pass2) {
-						$erro .= ' ' . lang('social.password_not_match').'.';
-					}
-					$erro = trim($erro);
+		$txt = troca($txt, '$link', $link_html);
+		$txt .= '</center>';
+		$subject = '[' . getenv('app.ProjecName') . '] ' . lang('social.forgout_email_title');
 
-					if (strlen($erro) == 0)
-						{
-							$password = md5($pass1);
-							$this
-								->set('us_password',$password)
-								->where('id_us',$dt['id_us'])
-								->update();
+		sendmail($email, $subject, $txt);
 
-							$sx = bsmessage(lang('social.password_changed'),1);
-							$sx .= '<br/>';
-							$sx .= '<a href="'.PATH.'social/login">'.lang('social.return_login').'</a>';
-							return $sx;
-						} else {
-							$check = '<br/>'.bsmessage($erro,3);
-						}
-				}
+		return $sx;
+	}
 
-			$style = 'width: 400px; font-size: 2em; border:1px solid #000000; padding: 10px; width: 100%;';
-			$sx = '';
-			$sx .= form_open();
-
-			$sx .= '<table width="600" border=0 align="center">';
-			$sx .= '<tr><td>';
-
-			$sx .= '<h2>' . lang('social.forgout_new_password') . '</h2>';
-
-			$sa = '<span class="small">' . lang('social.forgout_new_password') . '</span><br/>';
-			$sa .= form_input(array('name'=>'password','id'=>'password','style'=>$style,'type'=>'password','class'=>'form-control','value'=>get("password"),'placeholder'=>lang('social.forgout_new_password')));
-
-			$sb = '<span class="small">' . lang('social.forgout_new_password_confirm') . '</span><br/>';
-			$sb .= form_input(array('name' => 'password_confirm', 'id' => 'password_confirm', 'style' => $style, 'type' => 'password', 'class' => 'form-control', 'value' => get("password_confirm"), 'placeholder' => lang('social.forgout_new_password_confirm')));
-
-			$sx .= $sa.$sb;
-			$sx .= $check;
-			$sx .= '<br/>';
-
-			$sx .= form_submit(array('name'=>'submit','class'=>'btn btn-primary'),lang('social.save'));
-
-			$sx .= '</td></tr>';
-			$sx .= '</table>';
-
-			$sx .= form_close();
+	function forgout_form($d1 = '', $d2 = '')
+	{
+		$sx = '';
+		if (!isset($_SESSION['forgout'])) {
+			$sx = '<h2>' . lang('social.link_expired') . '</h2>';
 			return $sx;
 		}
+
+		$dt = $this->find($d1);
+		$keys = $_SESSION['forgout'];
+		$keyf = get("key");
+
+		if ($keys != $keyf) {
+			$sx = '<h2>' . lang('social.link_expired') . '</h2>';
+			return $sx;
+		}
+
+		/*********************************************** SAVE */
+		$check = '';
+		$pass1 = get("password");
+		$pass2 = get("password_confirm");
+		$erro = '';
+
+		if (strlen($pass1) > 0) {
+			$erro = "";
+			/***************** Tamanho da senha */
+			if (strlen($pass1) < 6) {
+				$erro .= ' ' . lang('social.password_short') . '.';
+			}
+			/***************** Senha de confirmação */
+			if ($pass1 != $pass2) {
+				$erro .= ' ' . lang('social.password_not_match') . '.';
+			}
+			$erro = trim($erro);
+
+			if (strlen($erro) == 0) {
+				$password = md5($pass1);
+				$this
+					->set('us_password', $password)
+					->where('id_us', $dt['id_us'])
+					->update();
+
+				$sx = bsmessage(lang('social.password_changed'), 1);
+				$sx .= '<br/>';
+				$sx .= '<a href="' . PATH . 'social/login">' . lang('social.return_login') . '</a>';
+				return $sx;
+			} else {
+				$check = '<br/>' . bsmessage($erro, 3);
+			}
+		}
+
+		$style = 'width: 400px; font-size: 2em; border:1px solid #000000; padding: 10px; width: 100%;';
+		$sx = '';
+		$sx .= form_open();
+
+		$sx .= '<table width="600" border=0 align="center">';
+		$sx .= '<tr><td>';
+
+		$sx .= '<h2>' . lang('social.forgout_new_password') . '</h2>';
+
+		$sa = '<span class="small">' . lang('social.forgout_new_password') . '</span><br/>';
+		$sa .= form_input(array('name' => 'password', 'id' => 'password', 'style' => $style, 'type' => 'password', 'class' => 'form-control', 'value' => get("password"), 'placeholder' => lang('social.forgout_new_password')));
+
+		$sb = '<span class="small">' . lang('social.forgout_new_password_confirm') . '</span><br/>';
+		$sb .= form_input(array('name' => 'password_confirm', 'id' => 'password_confirm', 'style' => $style, 'type' => 'password', 'class' => 'form-control', 'value' => get("password_confirm"), 'placeholder' => lang('social.forgout_new_password_confirm')));
+
+		$sx .= $sa . $sb;
+		$sx .= $check;
+		$sx .= '<br/>';
+
+		$sx .= form_submit(array('name' => 'submit', 'class' => 'btn btn-primary'), lang('social.save'));
+
+		$sx .= '</td></tr>';
+		$sx .= '</table>';
+
+		$sx .= form_close();
+		return $sx;
+	}
 
 
 	function signup()
@@ -1257,7 +1238,8 @@ class Socials extends Model
 		if (!check_email($user)) {
 			$sx .= '<h2>' . lang('social.email_invalid') . '<h2>';
 			$sx .= '<span class="singin" onclick="showLogin()">' . lang('social.return') . '</span>';
-			return $sx;		}
+			return $sx;
+		}
 
 		$dt = $this->user_exists($user);
 
@@ -1265,7 +1247,7 @@ class Socials extends Model
 			$this->user_add($user, $name, $inst);
 			$sx .= '<h2>' . lang('social.social_user_add_success') . '<h2>';
 			$sx .= '<hr>';
-			$sx .= '<h2>' . lang('social.social_check_you_email') . '<h2>';
+			$sx .= '<p>' . lang('social.social_check_you_email') . '<p>';
 			$sx .= '<span class="singin" onclick="showLogin()">' . lang('social.return') . '</span>';
 		} else {
 			$sx .= '<h2>' . lang('social.user_already') . '<h2>';
@@ -1285,6 +1267,15 @@ class Socials extends Model
 			'us_password_method' => 'MD5'
 		];
 		$this->insert($data);
+
+		/* Enviar e-mail */
+		$txt = '';
+		$txt .= 'Prezado usuário ' . $name . ',<br>';
+		$txt .= 'Usuário: ' . $user . '<br>';
+		$txt .= 'Senha:' . $pw1 . '<br>';
+		$subject = '[' . COLLECTION . '] ';
+		$subject .= lang('social.social_user_add');
+		sendemail($user, $subject, $txt);
 	}
 
 	function user_exists($email = '')
@@ -1320,8 +1311,8 @@ class Socials extends Model
 			$sx .= '            ' . $email . cr();
 			$sx .= '          </a>' . cr();
 			$sx .= '          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">' . cr();
-			$sx .= '            <li><a class="dropdown-item" href="' . (PATH . MODULE . '/social/?cmd=perfil') . '">' . lang('social.perfil') . '</a></li>' . cr();
-			$sx .= '            <li><a class="dropdown-item" href="' . (PATH . MODULE . '/social/?cmd=logout') . '">' . lang('social.logout') . '</a></li>' . cr();
+			$sx .= '            <li><a class="dropdown-item" href="' . (URL . '/social/?cmd=perfil') . '">' . lang('social.perfil') . '</a></li>' . cr();
+			$sx .= '            <li><a class="dropdown-item" href="' . (URL . '/social/?cmd=logout') . '">' . lang('social.logout') . '</a></li>' . cr();
 			$sx .= '          </ul>' . cr();
 			$sx .= '        </li>' . cr();
 			$sx .= '</ul>' . cr();

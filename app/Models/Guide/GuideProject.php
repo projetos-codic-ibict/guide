@@ -47,22 +47,24 @@ class GuideProject extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    var $id = 0;
+
     function index($d1,$d2,$d3)
         {
-            $this->path = PATH . MODULE . '/guide/project/';
-            $this->path_back = PATH . MODULE . '/guide/project/';
+            $this->path = PATH .  '/admin/guide/';
+            $this->path_back = PATH . '/admin/guide/';
             $sx = '';
-            switch($d2)
+            switch($d1)
                 {
                     case 'selected':
-                        $sx .= $this->selected($d3);
-                        $sx .= $this->viewid($d3);
+                        $sx .= $this->selected($d2);
+                        $sx .= $this->viewid($d2);
                         break;
                     case 'viewid':
-                        $sx .= $this->viewid($d3);
+                        $sx .= $this->viewid($d2);
                         break;
                     case 'edit':
-                        $this->id = $d3;
+                        $this->id = $d2;
                         $sx .= form($this);
                         break;
                     default:
@@ -87,6 +89,11 @@ class GuideProject extends Model
             $sx .= bsc(h($line['pj_name'],4),12);
             $sx .= bsc('<hr style="border: 2px solid #000080;">',12);
             return $sx;
+        }
+
+    function getProject()
+        {
+            return $this->getID();
         }
 
     function getID()
@@ -146,7 +153,7 @@ class GuideProject extends Model
                 <div class="card-body">
                     <h5 class="card-title">'. $line['pj_name'].'</h5>
                     <p class="card-text">'.$line['pj_desc'].'</p>
-                    <a href="'.PATH.MODULE.'/guide/project/selected/'.$line['id_pj'].'" class="btn btn-primary">'.lang('guide.go_project').'</a>
+                    <a href="'.PATH.MODULE.'/guide/selected/'.$line['id_pj'].'" class="btn btn-primary">'.lang('guide.go_project').'</a>
                 </div>
                 </div>
                 ';
