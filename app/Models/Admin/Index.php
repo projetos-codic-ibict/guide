@@ -46,6 +46,10 @@ class Index extends Model
 
             switch($d1)
                 {
+                    case 'block':
+                        $GuideBlock = new \App\Models\Guide\GuideBlock();
+                        $sx = $GuideBlock->index($d2,$d3,$d4);
+                        break;
                     case 'ajax':
                         $Ajax = new \App\Models\Admin\Ajax();
                         $sx .= $Ajax->index($d2, $d3, $d4);

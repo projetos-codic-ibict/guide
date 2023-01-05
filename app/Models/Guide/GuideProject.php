@@ -91,8 +91,9 @@ class GuideProject extends Model
     function header($line)
         {
             $sx = '';
-            $sx .= bsc(h($line['pj_name'],4),12);
-            $sx .= bsc('<hr style="border: 2px solid #000080;">',12);
+            $sx .= bsc(h($line['pj_name'],4),8);
+            $sx .= bsc('/'.$line['pj_path'], 4, 'text-end');
+            $sx .= bsc('<hr style="height: 3px;">',12);
             return $sx;
         }
 

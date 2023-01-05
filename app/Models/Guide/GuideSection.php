@@ -55,22 +55,26 @@ class GuideSection extends Model
         $prj = $GuideProject->getProject();
         $sx = '';
         switch ($d1) {
+            case 'viewid':
+                $sx .= $this->viewid($d2);
+                break;
             case 'edit':
                 $this->id = $d2;
-                echo '==>'.$d2;
-                $sx = form($this);
-                return $sx;
+                $dt = $GuideProject->find($prj);
+                $sx .= $GuideProject->header($dt);
+                $sx .= bsc(form($this),12);
+                return bs($sx);
             default:
                 if ($prj != '') {
                     $dt = $GuideProject->le($prj);
                     $sx .= $GuideProject->header($dt);
                     $sx .= h(lang('guide.section'),4);
                     $sx .= $this->list($d1);
-                    $sx .= $this->btn_new_section($prj);
+                    $sx .= bsc($this->btn_new_section($prj),12);
                 }
                 break;
         }
-        return $sx;
+        return bs($sx);
     }
 
     function list($d1, $d2 = '', $d3 = '', $d4 = '')
@@ -85,6 +89,30 @@ class GuideSection extends Model
         $sx = bs(view('Guide/sections_list', $dt));
         return $sx;
     }
+
+    function viewid($id)
+        {
+            $GuideProject = new \App\Models\Guide\GuideProject();
+            $sx = '';
+            $prj = $GuideProject->getProject();
+            $dt = $GuideProject->le($prj);
+            $sx .= $GuideProject->header($dt);
+
+            $sx .= $this->summary($id);
+
+            $sx .= $this->sections($id);
+
+            return $sx;
+        }
+
+    function sections($id)
+        {
+            $GuideBlock = new \App\Models\Guide\GuideBlock();
+            $sx = '';
+            $sx .= bsc($GuideBlock->btn_block_new($id),12);
+            $sx = bs($sx);
+            return $sx;
+        }
 
     function ajax($d1, $d2, $d3, $d4)
     {
@@ -114,9 +142,6 @@ class GuideSection extends Model
                     $this->set($data)->insert();
                 }
                 break;
-            case 'edit':
-                $sx = $this->edit($d2, $d3, $d4);
-                break;
             default:
                 $sx = 'Ajax SECTION not found';
                 pre($_POST, false);
@@ -132,89 +157,7 @@ class GuideSection extends Model
         exit;;
     }
 
-    function type()
-    {
-        $tp = array(
-            'title' => 'header',
-            'text' => 'text',
-            //'code'=>'code',
-            'image' => 'img',
-            //'table'=>'table',
-            //'list'=>'list',
-            'link' => 'url',
-            'video' => 'video',
-            //'audio'=>'audio',
-            //'file'=>'file'
-        );
-        return $tp;
-    }
 
-    function ajax_block_new_type($sec, $ord, $type)
-    {
-        $type = get("type");
-        $GuideContent = new \App\Models\Guide\GuideContent();
-        $content = '';
-        $data['ct_title'] = lang('guide.add_content_' . $type);
-        /* Se LINK */
-        if ($type == 'link') {
-            $data['ct_title'] = 'https://:::';
-        }
-        $data['ct_type'] = $type;
-        $data['ct_description'] = '';
-        /* Se Texto */
-        if ($type == 'text') {
-            $data['ct_description'] = $data['ct_title'];
-        }
-
-        /* Se Video */
-        if ($type == 'video') {
-            $data['ct_title'] = 'https://www.youtube.com/embed/7LNBd_7KmD4';
-            $data['ct_description'] = 0;
-        }
-        $data['ct_section'] = $sec;
-        $data['ct_seq'] = ($sec + 1);
-        $data['updated_at'] = date("Y-m-d H:i:s");
-        $idb = $GuideContent->set($data)->insert();
-
-        echo $GuideContent->edit_block($idb);
-        exit;
-    }
-
-    function ajax_block_new($sec, $ord)
-    {
-        $sx = '';
-        $types = $this->type();
-        $sx = '<table width="100%" class="table">';
-        $col = 99;
-        $maxcol = 5;
-        foreach ($types as $type => $name) {
-            $link = '<button class="p-4 rounded"
-                            onclick="new_section_type(\'' . $sec . '\',\'' . $ord . '\',\'' . $type . '\');">';
-            $linka = '</button>';
-            if ($col >= $maxcol) {
-                if ($col <> 99) {
-                    $sx .= '</tr>';
-                }
-                $sx .= '<tr>';
-                $col = 0;
-            }
-            $sx .= '<td width="10%" align="center">';
-            $sx .= $link;
-            $sx .= bsicone($name, 64);
-            $sx .= '</br>';
-            $sx .= '<span class="small">';
-            $sx .= lang('guide.block_type_' . $type);
-            $sx .= '</span>';
-            $sx .= $linka;
-            $sx .= '</td>';
-            $col++;
-        }
-        if (($col > 1) and ($col <> 99)) {
-            $sx .= '</tr>';
-        }
-        $sx .= '</table>';
-        return $sx;
-    }
 
     function block_new($sec, $ord = 0)
     {
@@ -248,11 +191,10 @@ class GuideSection extends Model
 
     function btn_new_section($id)
     {
-        $sx = '<div id="form_section">';
-        $sx .= '<span onclick="section_edit(0,\'form_section\');">';
-        $sx .= bsicone('plus');
-        $sx .= '</span>';
-        $sx .= '</div>';
+        $sx = '';
+        $sx .= '<a href="'.PATH.'/admin/section/edit/0" class="btn btn-outline-primary">'.
+            lang('guide.section_new').
+            '</a>';
         return $sx;
     }
 
