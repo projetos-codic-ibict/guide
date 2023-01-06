@@ -57,8 +57,7 @@ class GuideProject extends Model
             switch($d1)
                 {
                     case 'selected':
-                        $this->selected($d2);
-                        $sx .= $this->viewid($d2);
+                        $sx .= $this->selected($d2);
                         break;
                     case 'viewid':
                         $sx .= $this->viewid($d2);
@@ -85,11 +84,21 @@ class GuideProject extends Model
     function le($d3)
         {
             $dt = $this->where('id_pj',$d3)->findAll();
+            if (count($dt) == 0)
+                {
+                    return array();
+                }
             return $dt[0];
         }
 
     function header($line)
         {
+            if (count($line) == 0)
+                {
+                    session()->remove('guide_pj');
+                    return bsmessage("Erro no ID do projeto",3);
+
+                }
             $sx = '';
             $sx .= bsc(h($line['pj_name'],4),8);
             $sx .= bsc('/'.$line['pj_path'], 4, 'text-end');
@@ -106,8 +115,7 @@ class GuideProject extends Model
         {
             if (!isset($_SESSION['guide_pj']))
                 {
-                    echo "Project not found";
-                    exit;
+                    return 0;
                 }
             $id = $_SESSION['guide_pj'];
             return $id;
@@ -119,6 +127,11 @@ class GuideProject extends Model
 
             $dt = $this->le($prj);
             $sx = $this->header($dt);
+
+            if ($dt == '')
+                {
+                    return $sx;
+                }
 
             $sa = '';
             $sa .= $GuideSection->summary($prj);
@@ -135,7 +148,10 @@ class GuideProject extends Model
         {
             $data['guide_project'] = $id;
             $_SESSION['guide_pj'] = $id;
-            redirect()->to('/admin/project/'.$id);
+            $sx = metarefresh(PATH . '/admin/section/');
+            $sx .= 'Redirecionando...';
+            return $sx;
+            //redirect()->to('/admin/project/'.$id);
         }
 
     function btn_project_new()

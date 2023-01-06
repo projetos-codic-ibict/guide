@@ -58,6 +58,10 @@ class Index extends Model
                         $GuideProject = new \App\Models\Guide\GuideProject();
                         $sx .= $GuideProject->index($d2,$d3,$d4);
                         break;
+                    case 'media':
+                        $GuideMedia = new \App\Models\Guide\GuideMedia();
+                        $sx .= $GuideMedia->index($d2, $d3, $d4);
+                        break;
                     case 'section':
                         $GuideSection = new \App\Models\Guide\GuideSection();
                         $sx .= $GuideSection->index($d2, $d3, $d4);

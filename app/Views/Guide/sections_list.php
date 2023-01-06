@@ -12,7 +12,7 @@
         <tbody>
             <tr>
                 <td><?= $row['sc_seq']; ?></td>
-                <td><?= $row['sc_path']; ?></td>
+                <td><a href="<?= PATH . '/admin/section/viewid/' . $row['id_sc']; ?>" class="text-secondary" style="text-decoration: none;"><?= $row['sc_path']; ?></a></td>
                 <td><?= $row['sc_father_name']; ?></td>
                 <td><a href="<?= PATH . '/admin/section/viewid/' . $row['id_sc']; ?>" class="text-secondary" style="text-decoration: none;"><?= $row['sc_name']; ?></a></td>
                 <td class="text-center">

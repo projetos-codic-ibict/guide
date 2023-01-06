@@ -16,6 +16,13 @@ class GuideContent extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'ct_project' => [
+                'type'       => 'INT',
+            ],
+            'ct_start' => [
+                'type'       => 'INT',
+                'default'   => 0,
+            ],
             'ct_type' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '5',

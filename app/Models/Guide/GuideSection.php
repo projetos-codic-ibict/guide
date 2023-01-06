@@ -77,6 +77,15 @@ class GuideSection extends Model
         return bs($sx);
     }
 
+    function header($dt)
+        {
+            $sx = 'HEADER';
+            $sx .= '<hr>';
+            $sx = bsc($sx,12);
+            $sx = bs($sx);
+            return $sx;
+        }
+
     function list($d1, $d2 = '', $d3 = '', $d4 = '')
     {
         $dt['data'] = $this
@@ -95,8 +104,13 @@ class GuideSection extends Model
             $GuideProject = new \App\Models\Guide\GuideProject();
             $sx = '';
             $prj = $GuideProject->getProject();
+
             $dt = $GuideProject->le($prj);
             $sx .= $GuideProject->header($dt);
+
+            if (count($dt) == 0) { return $sx; }
+
+            $sx .= $this->header($dt);
 
             $sx .= $this->summary($id);
 
@@ -113,50 +127,6 @@ class GuideSection extends Model
             $sx = bs($sx);
             return $sx;
         }
-
-    function ajax($d1, $d2, $d3, $d4)
-    {
-        $sx = '';
-        echo "$d1 - $d2 - $d3 - $d4";
-        switch ($d1) {
-            case 'ajax_block_edit_type':
-                echo $this->ajax_block_new_type($d2, $d3, $d4);
-                exit;
-                break;
-            case 'ajax_block_edit':
-                echo $this->ajax_block_new($d2, $d3, $d4);
-                exit;
-                break;
-            case 'ajax_viewid':
-                $sx .= $this->ajax_viewid($d2);
-                break;
-            case 'save':
-                $data = array();
-                $id = get("id");
-                $data['sc_project'] = get("prj");
-                $data['sc_name'] = get("title");
-                $data['sc_path'] = get("path");
-                $data['sc_seq'] = get("ord");
-                $data['sc_father'] = get("father");
-                if ($id == 0) {
-                    $this->set($data)->insert();
-                }
-                break;
-            default:
-                $sx = 'Ajax SECTION not found';
-                pre($_POST, false);
-                $sx .= "<pre>
-                        d1 = $d1
-                        d2 = $d2
-                        d3 = $d3
-                        d4 = $d4
-                        </pre>";
-                break;
-        }
-        echo $sx;
-        exit;;
-    }
-
 
 
     function block_new($sec, $ord = 0)
@@ -208,21 +178,13 @@ class GuideSection extends Model
 
     function summary($id)
     {
-        $sx = '<div id="summary">';
-        $dt = $this->where('sc_project', $id)->orderBy('sc_seq', 'ASC')->findAll();
-        if (count($dt) == 0) {
-            $sx .= bsmessage(msg('guide.no_sections'), 3) . cr();
-        } else {
-            $sx .= '<ul>' . cr();
-            for ($r = 0; $r < count($dt); $r++) {
-                $line = $dt[$r];
-                $link = '<a href="' . PATH . '/admin/section/' . $line['id_sc'] . '">';
-                $linka = '</a>' . cr();
-                $sx .= '<li>' . $link . $line['sc_name'] . '</li>' . cr();
-            }
-            $sx .= '</ul>' . cr();
-        }
-        $sx .= '</div>' . cr();
+        $edit = 1;
+        $GuideProject = new \App\Models\Guide\GuideProject();
+        $prj = $GuideProject->getId();
+
+        $GuideBlock = new \App\Models\Guide\GuideBlock();
+        $sx = $GuideBlock->viewid($id,$edit);
+
         return $sx;
     }
 

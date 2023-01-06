@@ -16,7 +16,7 @@ class GuideContent extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'id_ct', 'ct_title', 'ct_type', 'ct_description',
-        'ct_section', 'ct_seq'
+        'ct_section', 'ct_seq', 'ct_project'
     ];
 
     // Dates
@@ -81,71 +81,6 @@ class GuideContent extends Model
         exit;
     }
 
-    function ajax_save($d1,$d2,$d3)
-        {
-            $data = array();
-            $dt = $this->find($d2);
-            switch($dt['ct_type'])
-            {
-                case 'title':
-                    $data['ct_title'] = get('vlr');
-                    $data['ct_description'] = '';
-                    break;
-
-                case 'text':
-                    $data['ct_description'] = get("vlr");
-                break;
-
-                case 'image':
-                    $data['ct_description'] = get('vlr');
-                    break;
-
-                case 'link':
-                    $data['ct_title'] = get('vlr');
-                    $data['ct_description'] = get('vlr');
-                    break;
-
-                case 'video':
-                    $data['ct_title'] = get('vlr');
-                    $data['ct_description'] = get('vlr2');
-                    break;
-            }
-            $this->set($data)->where('id_ct', $d2)->update();
-            echo $this->ajax_block_view($d2);
-        }
-
-    function edit_block($id, $type = '')
-        {
-            $sx = 'X';
-            echo "id = $id, type = $type<br/>";
-            pre($_POST);
-
-            return $sx;
-        }
-
-    function ajax_edit_block_type($d2, $d3)
-    {
-        $sx = '';
-        $dt = $this->find($d2);
-        $type = $dt['ct_type'];
-        switch ($type) {
-            case 'text':
-                $sx = $this->ajax_edit_block_type_text($dt, $d3);
-                break;
-            case 'title':
-                $sx = $this->ajax_edit_block_type_title($dt, $d3);
-                break;
-            case 'link':
-                $sx = $this->ajax_edit_block_type_title($dt, $d3);
-                break;
-            case 'video':
-                $sx = $this->ajax_edit_block_type_video($dt, $d3);
-                break;
-            default:
-                $sx .= bsmessage('Tipo de bloco não definido para edição, ver ajax_edit_block_type: '.$type, 3);
-        }
-        echo $sx;
-    }
 
     function ajax_edit_block_type_title($dt, $d3)
     {
@@ -161,7 +96,7 @@ class GuideContent extends Model
         return $sx;
     }
 
-    function ajax_edit_block_type_video($dt, $d3)
+    function xxx_ajax_edit_block_type_video($dt, $d3)
     {
         $sx = '';
         $sx .= '<span class="small">' . msg('guide.video_link') . '</span>';
