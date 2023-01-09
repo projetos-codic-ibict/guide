@@ -5,33 +5,26 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class UserLog extends Migration
+class GuideStyle extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id_ul' => [
+            'id_css' => [
                 'type'           => 'INT',
                 'constraint'     => 5,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'ul_user' => [
+            'css_project' => [
                 'type'       => 'INT',
             ],
-            'ul_ip' => [
+            'css_class' => [
                 'type'       => 'VARCHAR',
-                'constraint'     => 20,
+                'constraint' => '400',
             ],
-            'ul_access' => [
-                'type'       => 'DATETIME',
-            ],
-            'i_size' => [
-                'type'       => 'DOUBLE',
-                'default' => 0,
-            ],
-            'i_pj' => [
-                'type'       => 'INT',
+            'css_code' => [
+                'type'       => 'TEXT',
             ],
             'created_at' => [
                 'type'    => 'TIMESTAMP',
@@ -43,12 +36,12 @@ class UserLog extends Migration
             ],
 
         ]);
-        $this->forge->addKey('id_ul', true);
-        $this->forge->createTable('users_log');
+        $this->forge->addKey('id_css', true);
+        $this->forge->createTable('guide_style');
     }
 
     public function down()
     {
-        $this->forge->dropTable('users_log');
+        $this->forge->dropTable('guide_style');
     }
 }

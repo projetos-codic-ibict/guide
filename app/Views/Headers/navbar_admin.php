@@ -512,6 +512,7 @@ $prj = $GuideProject->getProject();
                         <a href="<?= PATH . '/admin/media/upload'; ?>" class="dashboard-nav-dropdown-item">Upload Média</a>
                     </div>
                 </div>
+                <a href="<?= PATH . '/admin/style'; ?>" class="dashboard-nav-item"><i class="fas fa-code"></i> <?= lang('guide.style'); ?> </a>
                 <a href="<?= PATH . '/admin/vars'; ?>" class="dashboard-nav-item"><i class="fas fa-file-upload"></i> <?= lang('guide.variables'); ?> </a>
 
                 <a href="#" class="dashboard-nav-item"><i class="fas fa-cogs"></i> Settings </a><a href="#" class="dashboard-nav-item"><i class="fas fa-user"></i> Profile </a>

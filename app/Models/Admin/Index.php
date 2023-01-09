@@ -46,6 +46,10 @@ class Index extends Model
 
             switch($d1)
                 {
+                    case 'style':
+                        $GuideStyle = new \App\Models\Guide\GuideCSS();
+                        $sx = $GuideStyle->index($d2, $d3, $d4);
+                        break;
                     case 'block':
                         $GuideBlock = new \App\Models\Guide\GuideBlock();
                         $sx = $GuideBlock->index($d2,$d3,$d4);

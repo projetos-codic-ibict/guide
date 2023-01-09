@@ -131,15 +131,35 @@ class GuideBlock extends Model
             $this->set($dr)->where('id_ct', $dt['id_ct'])->update();
             return wclose();
         }
+        $options = [
+            'H1'  => 'h1',
+            'H2'    => 'h2',
+            'H3'  => 'h3',
+            'H4' => 'h4',
+        ];
+        $order = $this->order();
         $sx = form_open();
         $sx .= form_hidden(array('id_ct' => $dt['id_ct'], 'ct_description'=>''));
         $sx .= '<label>' . lang('guide.title') . '</label>';
         $sx .= form_input(array('name' => 'ct_title', 'value' => $dt['ct_title'], 'style' => 'width: 100%;'));
+        $sx .= '<label>' . lang('guide.title_header') . '</label>';
+        $sx .= form_dropdown('ct_description', $options, 'large');
+        $sx .= form_dropdown('ct_seq', $order, 'large');
         $sx .= form_submit(array('name' => 'action', 'value' => lang('guide.save'), 'class' => 'btn btn-outline-primary'));
         $sx .= form_close();
 
         return $sx;
     }
+
+    function order()
+        {
+            $o = array();
+            for ($r=1;$r < 200;$r++)
+                {
+                    $o[$r] = $r;
+                }
+            return $o;
+        }
 
     function edit_type_text($dt)
         {
@@ -147,6 +167,8 @@ class GuideBlock extends Model
                 {
                     $dr = $_POST;
                     $this->set($dr)->where('id_ct',$dt['id_ct'])->update();
+                    $GuideVariables = new \App\Models\Guide\GuideVariables();
+                    $GuideVariables->detect($dt['ct_project'],$dt['ct_description']);
                     return wclose();
                 }
             $sx = form_open();
@@ -159,7 +181,12 @@ class GuideBlock extends Model
 
     function viewid($id,$edit=1)
         {
+            $GuideProject = new \App\Models\Guide\GuideProject();
+            $prj = $GuideProject->getId();
+
             $sx = '';
+            $GuideStyle = new \App\Models\Guide\GuideCSS();
+            $sx .= $GuideStyle->style($prj);
             $dt = $this
                 ->where('ct_section',$id)
                 ->orderBY('ct_seq')
@@ -206,8 +233,10 @@ class GuideBlock extends Model
                 break;
 
                     case 'title':
+                        $h = sonumero($dt['ct_description']);
+                        if ($h == '') { $h = '1'; }
                         $sx .= bsc(
-                        h($dt['ct_title'], 4),
+                        h($dt['ct_title'], $h),
                         $bs
                         );
                         break;
@@ -219,7 +248,7 @@ class GuideBlock extends Model
                         break;
                     case 'text':
                         $sx .= bsc(
-                            troca($dt['ct_description'],chr(13),'<br>'),
+                            '<p>'.troca($dt['ct_description'],chr(13),'<br>'). '</p>',
                             $bs
                         );
                         break;

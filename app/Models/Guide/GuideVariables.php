@@ -69,7 +69,7 @@ class GuideVariables extends Model
                         {
                             $line = $dtl[$r];
                             $sx .= bsc(h($line['v_name'],4),4);
-                            $sx .= bsc('descrição',8);
+                            $sx .= bsc($line['v_value'],8);
                         }
                     if (count($dtl) == 0)
                         {
@@ -80,7 +80,7 @@ class GuideVariables extends Model
             return $sx;
         }
 
-    function detect($txt)
+    function detect($prj,$txt)
         {
             $var = array();
             $txt = troca($txt,array(',','.','!',':','?'), ' ');
@@ -88,7 +88,32 @@ class GuideVariables extends Model
                 {
                     $v = substr($txt,$pos,100);
                     $v = substr($v,0,strpos($v,' '));
-                    echo $v.'<br>';
+
+                    $txt = troca($txt,$v,'xx');
+                    if ($v != '')
+                        {
+                            $this->register($prj,$v);
+                        }
                 }
         }
+        function register($prj,$v)
+            {
+                $dt = $this
+                    ->where('v_name',$v)
+                    ->where('v_pj',$prj)
+                    ->findAll();
+                if (count($dt) == 0)
+                    {
+                        $dt['v_name'] = $v;
+                        $dt['v_pj'] = $prj;
+                        $dt['v_value'] = $v;
+                        $this->set($dt)->insert();
+                    } else {
+                        $dt['v_name'] = $v;
+                        $dt['v_pj'] = $prj;
+                        $dt['v_value'] = $v;
+                        $this->set($dt)->where('id_v',$dt[0]['id_v'])->insert();
+                    }
+
+            }
 }
