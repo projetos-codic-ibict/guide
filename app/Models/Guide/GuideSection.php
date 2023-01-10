@@ -176,9 +176,31 @@ class GuideSection extends Model
         return $sx;
     }
 
+    function menu($prj)
+        {
+            $dt = $this->where('sc_project',$prj)->orderBy('sc_seq')->findAll();
+            $sx = '<ul>';
+            for ($r=0;$r < count($dt);$r++)
+                {
+                    $line = $dt[$r];
+                    $link = '<a href="#">';
+                    $linka = '</a>';
+                    $sx .= '<li>'.$link.$line['sc_name'].$linka.'</li>'.cr();
+                }
+            $sx .= '</ul>';
+            return $sx;
+        }
+
     function summary($id)
     {
-        $edit = 1;
+        $edit = 0;
+        $Socials = new \App\Models\Socials();
+        $user = $Socials->getUser();
+        if ($Socials->getAccess('#ADM#EDI'))
+            {
+                $edit = 1;
+            }
+
         $GuideProject = new \App\Models\Guide\GuideProject();
         $prj = $GuideProject->getId();
 

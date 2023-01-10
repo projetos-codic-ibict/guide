@@ -515,7 +515,8 @@ $prj = $GuideProject->getProject();
                 <a href="<?= PATH . '/admin/style'; ?>" class="dashboard-nav-item"><i class="fas fa-code"></i> <?= lang('guide.style'); ?> </a>
                 <a href="<?= PATH . '/admin/vars'; ?>" class="dashboard-nav-item"><i class="fas fa-file-upload"></i> <?= lang('guide.variables'); ?> </a>
 
-                <a href="#" class="dashboard-nav-item"><i class="fas fa-cogs"></i> Settings </a><a href="#" class="dashboard-nav-item"><i class="fas fa-user"></i> Profile </a>
+                <a href="<?= PATH . '/admin/headers'; ?>" class="dashboard-nav-item"><i class="fas fa-cogs"></i> <?= lang('guide.headrs'); ?> </a>
+                <a href="#" class="dashboard-nav-item"><i class="fas fa-user"></i> Profile </a>
                 <div class="nav-item-divider"></div>
             <?php } ?>
             <a href="<?= PATH . '/admin/social/logout'; ?>" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i> Logout </a>

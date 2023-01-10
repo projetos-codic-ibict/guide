@@ -76,9 +76,26 @@ class GuideProject extends Model
             return $sx;
         }
 
-    function view_guide($id)
+    function view_guide($prj)
         {
-            echo "==>".$id;
+        $GuideSection = new \App\Models\Guide\GuideSection();
+
+        $dt = $this->le($prj);
+        $sx = $this->header($dt);
+
+        if ($dt == '') {
+            return $sx;
+        }
+
+        $sb = '';
+        $sb .= $GuideSection->summary($prj);
+
+        $sa = $GuideSection->menu($prj);
+        $sx .= bsc($sa,4);
+        $sx .= bsc($sb,8);
+
+        $sx = bs($sx);
+        return $sx;
         }
 
     function le($d3)

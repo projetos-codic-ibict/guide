@@ -25,22 +25,24 @@ class Guide extends BaseController
 
     public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
-        $Socials = new \App\Models\Socials();
         $project = new \App\Models\Guide\GuideProject();
 
         $dt = $project->where('pj_path',$d1)->first();
         if ($dt == '')
             {
-                echo "ERRO DE ACESSO AO GUIA";
-                exit;
+                $dt = $project->first();
+                if ($dt == '') {
+                    echo "ERRO DE ACESSO AO GUIA";
+                    exit;
+                }
             }
 
         $prj = $dt['id_pj'];
 
         $sx = view('Headers/header');
-        $sb = $project->view_guide($d2,$d3,$d4);
         $sx .= view('Headers/navbar');
-        $user = $Socials->getuser();
+
+        $sx .= bs($project->view_guide($prj, $d3, $d4));
 
         $sx .= view('Headers/footer');
         return $sx;
