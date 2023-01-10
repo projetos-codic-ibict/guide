@@ -18,7 +18,7 @@ class GuideSection extends Model
         'id_sc', 'sc_name', 'sc_seq', 'sc_path', 'sc_father', 'sc_project', 'updated_at'
     ];
     protected $typeFields    = [
-        'hidden', 'string', '[1-99]]', 'string', 'hidden', 'hidden', 'now'
+        'hidden', 'string', '[1-99]]', 'string', 'sql:id_sc:sc_name:guide_section where sc_father = 0', 'hidden', 'now'
     ];
 
     // Dates
@@ -60,6 +60,9 @@ class GuideSection extends Model
                 break;
             case 'edit':
                 $this->id = $d2;
+                if (round($d2) == 0) {
+                    $_POST['sc_project'] = $prj;
+                    }
                 $dt = $GuideProject->find($prj);
                 $sx .= $GuideProject->header($dt);
                 $sx .= bsc(form($this),12);
@@ -76,6 +79,48 @@ class GuideSection extends Model
         }
         return bs($sx);
     }
+
+    function indice($prj)
+        {
+            $sx = '';
+            $sx = h('SUMÁRIO', 1);
+
+            $dt = $this
+                ->select('sc_name, ct_title, ct_type, sc_seq, ct_seq, sc_path, pj_path, sc_project')
+                ->join('guide_content', 'ct_section = id_sc','LEFT')
+                ->join('guide_project','sc_project = id_pj','LEFT')
+                ->where('sc_project',$prj)
+                ->where('ct_type', 'title')
+                ->groupBy('sc_name, ct_title, ct_type, sc_seq, ct_seq, sc_path, pj_path, sc_project')
+                ->findAll();
+
+            $xsec = '';
+            for ($r=0;$r < count($dt);$r++)
+                {
+                    $line = $dt[$r];
+                    $sec = $line['sc_name'];
+                    if ($sec != $xsec)
+                        {
+                            $link = '<a href="'. $line['pj_path'].'/'.$line['sc_path'].'">';
+                            $linka = '</a>';
+                            if (strlen($sx) > 0) { $sx .= '</ul>'; }
+                            $xsec = $sec;
+                            $sx .= h($link.$line['sc_name'].$linka);
+                            $sx .= '<ul>';
+
+                        } else {
+                            $path = $line['sc_path'];
+                            $sx .= '<li>';
+                            $sx .= $line['ct_title'];
+                            $sx .= '</li>';
+                        }
+
+                }
+            if (strlen($sx) > 0) {
+                $sx .= '</ul>';
+            }
+            return $sx;
+        }
 
     function header($dt)
         {
@@ -94,6 +139,7 @@ class GuideSection extends Model
                         guide_section.sc_father as sc_father,
                         gs.sc_path as sc_father_name')
             ->join('guide_section as gs', 'guide_section.sc_father = gs.id_sc', 'left')
+            ->orderBy('sc_seq')
             ->findAll();
         $sx = bs(view('Guide/sections_list', $dt));
         return $sx;
@@ -178,34 +224,49 @@ class GuideSection extends Model
 
     function menu($prj)
         {
-            $dt = $this->where('sc_project',$prj)->orderBy('sc_seq')->findAll();
+            $dt = $this
+                ->join('guide_project','id_pj = sc_project')
+                ->where('sc_project',$prj)
+                ->orderBy('sc_seq')->findAll();
             $sx = '<ul>';
             for ($r=0;$r < count($dt);$r++)
                 {
+                    $style="";
                     $line = $dt[$r];
-                    $link = '<a href="#">';
+                    if ($line['sc_father'] != 0) { $style = "margin-left: 15px;"; } else {
+                        $style = "font-weight: bold;";
+                    }
+
+                    $link = '<a href="' . PATH.'/'.$line['pj_path'] . '/' . $line['sc_path'] . '">';
                     $linka = '</a>';
-                    $sx .= '<li>'.$link.$line['sc_name'].$linka.'</li>'.cr();
+                    $sx .= '<li style="'.$style.'">'.$link.$line['sc_name'].$linka.'</li>'.cr();
                 }
             $sx .= '</ul>';
             return $sx;
         }
 
-    function summary($id)
+    function summary($id, $edit=0)
     {
+        $sx = '';
         $edit = 0;
         $Socials = new \App\Models\Socials();
         $user = $Socials->getUser();
-        if ($Socials->getAccess('#ADM#EDI'))
-            {
-                $edit = 1;
-            }
+        if ($edit == 1)
+        {
+            if ($Socials->getAccess('#ADM#EDI'))
+                {
+                    $edit = 1;
+                }
+        }
+
+        $GuideCSS = new \App\Models\Guide\GuideCSS();
+        $sx .= '['.$id.']'.$GuideCSS->style($id);
 
         $GuideProject = new \App\Models\Guide\GuideProject();
         $prj = $GuideProject->getId();
 
         $GuideBlock = new \App\Models\Guide\GuideBlock();
-        $sx = $GuideBlock->viewid($id,$edit);
+        $sx .= $GuideBlock->viewid($id,$edit);
 
         return $sx;
     }

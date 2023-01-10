@@ -80,16 +80,38 @@ class GuideVariables extends Model
             return $sx;
         }
 
+    function recover_variable($t)
+        {
+            $v = '';
+            for ($r=0;$r < strlen($t);$r++)
+                {
+                    $s = substr($t,$r,1);
+                    $c = ord($s);
+                    if ((($c >= 65) and ($c <= 90)) or ($c == 36) or ($c == 95) or (($c >= 48) and ($c < 57)))
+                        {
+                            $v .= $s;
+                        } else {
+                            break;
+                        }
+
+                }
+            if ($v == '')
+                {
+                    $v = 'XXX';
+                }
+            return $v;
+            exit;
+        }
+
     function detect($prj,$txt)
         {
             $var = array();
-            $txt = troca($txt,array(',','.','!',':','?'), ' ');
+            $txt = troca($txt,array(',','.','!',':','?','/','\\'), ' ');
             while($pos = strpos($txt,'$'))
                 {
-                    $v = substr($txt,$pos,100);
-                    $v = substr($v,0,strpos($v,' '));
+                    $v = $this->recover_variable(substr($txt,$pos,100));
 
-                    $txt = troca($txt,$v,'xx');
+                    $txt = troca($txt,$v,'[xxx]');
                     if ($v != '')
                         {
                             $this->register($prj,$v);

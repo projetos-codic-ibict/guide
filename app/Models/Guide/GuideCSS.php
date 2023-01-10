@@ -154,7 +154,7 @@ class GuideCSS extends Model
     function check($prj = '')
     {
         $sx = '';
-        $st = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p');
+        $st = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p','code');
         $sx .= 'Check:<ul>';
         for ($r = 0; $r < count($st); $r++) {
             $rst = '<b>' . $this->register($prj, $st[$r], '') . '</b>';

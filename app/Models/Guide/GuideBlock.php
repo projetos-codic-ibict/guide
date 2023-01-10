@@ -83,6 +83,9 @@ class GuideBlock extends Model
                     case 'link':
                         $sx = $this->edit_type_link($dt);
                         break;
+                    case 'code':
+                        $sx = $this->edit_type_code($dt);
+                        break;
                     default:
                         $sx .= "OPS $type";
                 }
@@ -179,6 +182,23 @@ class GuideBlock extends Model
             return $sx;
         }
 
+    function edit_type_code($dt)
+    {
+        if (get('action') != '') {
+            $dr = $_POST;
+            $this->set($dr)->where('id_ct', $dt['id_ct'])->update();
+            $GuideVariables = new \App\Models\Guide\GuideVariables();
+            $GuideVariables->detect($dt['ct_project'], $dt['ct_description']);
+            return wclose();
+        }
+        $sx = form_open();
+        $sx .= form_hidden(array('id_ct' => $dt['id_ct']));
+        $sx .= form_textarea(array('name' => 'ct_description', 'value' => $dt['ct_description'], 'rows' => 10, 'style' => 'width: 100%;'));
+        $sx .= form_submit(array('name' => 'action', 'value' => lang('guide.save'), 'class' => 'btn btn-outline-primary'));
+        $sx .= form_close();
+        return $sx;
+    }
+
     function viewid($id,$edit=1)
         {
             $GuideProject = new \App\Models\Guide\GuideProject();
@@ -231,7 +251,6 @@ class GuideBlock extends Model
                         $bs
                     );
                 break;
-
                     case 'title':
                         $h = sonumero($dt['ct_description']);
                         if ($h == '') { $h = '1'; }
@@ -240,9 +259,19 @@ class GuideBlock extends Model
                         $bs
                         );
                         break;
+                    case 'code':
+                        $h = sonumero($dt['ct_description']);
+                        if ($h == '') {
+                            $h = '1';
+                        }
+                        $sx .= bsc(
+                            '<pre class="code">'.$dt['ct_description']. '</pre>',
+                            $bs
+                        );
+                break;
                     case 'link':
                         $sx .= bsc(
-                            '<a href="'. $dt['ct_description'].'" target="_blank">'.$dt['ct_title'].'</a>',
+                            '<pre>' . troca($dt['ct_description'], chr(13), '<br>') . '</pre>',
                             $bs
                         );
                         break;
@@ -276,7 +305,7 @@ class GuideBlock extends Model
         $tp = array(
             'title' => 'header',
             'text' => 'text',
-            //'code'=>'code',
+            'code'=>'code',
             'image' => 'img',
             //'table'=>'table',
             //'list'=>'list',

@@ -26,6 +26,8 @@ class Guide extends BaseController
     public function index($d1='', $d2 ='', $d3 ='', $d4 = '')
     {
         $project = new \App\Models\Guide\GuideProject();
+        $GuideSection = new \App\Models\Guide\GuideSection();
+        $GuideHeaderFooter = new \App\Models\Guide\GuideHeaderFooter();
 
         $dt = $project->where('pj_path',$d1)->first();
         if ($dt == '')
@@ -40,9 +42,20 @@ class Guide extends BaseController
         $prj = $dt['id_pj'];
 
         $sx = view('Headers/header');
-        $sx .= view('Headers/navbar');
 
-        $sx .= bs($project->view_guide($prj, $d3, $d4));
+        echo "==d1=$d1==d2=$d2==d3=$d3==d4=$d4==";
+
+        if ($d1=='')
+            {
+                $sx .= bs($project->indice($prj, $d2, $d3));
+            } else {
+                $dts = $GuideSection->where('sc_path',$d2)->first();
+                $sec = $dts['id_sc'];
+                $sx .= $GuideHeaderFooter->content('H', $prj);
+                $sx .= bs($project->view_guide($sec, $d2, $d3));
+                $sx .= $GuideHeaderFooter->content('F', $prj);
+
+            }
 
         $sx .= view('Headers/footer');
         return $sx;
