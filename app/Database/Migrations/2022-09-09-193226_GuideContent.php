@@ -53,7 +53,6 @@ class GuideContent extends Migration
             ],
         ]);
         $this->forge->addKey('id_ct', true);
-        $this->forge->addForeignKey('ct_section', 'guide_section', 'ct_seq');
         $this->forge->createTable('guide_content');
     }
 
