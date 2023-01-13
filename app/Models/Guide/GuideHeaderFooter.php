@@ -55,6 +55,7 @@ class GuideHeaderFooter extends Model
 
     function index($d1,$d2,$d3)
         {
+            $sx = '';
             $GuideProjec = new \App\Models\Guide\GuideProject();
             $prj = $GuideProjec->getId();
 
