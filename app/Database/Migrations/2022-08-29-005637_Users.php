@@ -63,11 +63,11 @@ class Users extends Migration
             ],
         ]);
         $this->forge->addKey('id_us', true);
-        //$this->forge->createTable('Users');
+        $this->forge->createTable('users');
 
         $data = array(
                 'us_nome' => 'Administrador',
-                'us_email' => 'renefgj@gmail.com',
+                'us_email' => 'admin',
                 'us_image'=>'',
                 'us_genero' => 'N',
                 'us_verificado' => 1,
