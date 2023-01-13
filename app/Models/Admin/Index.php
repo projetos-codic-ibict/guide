@@ -42,7 +42,7 @@ class Index extends Model
 
     function index($d1,$d2,$d3,$d4)
         {
-            $sx = "XXXXXX $d1 - $d2";
+            $sx = "";
 
             switch($d1)
                 {

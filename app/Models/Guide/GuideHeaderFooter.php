@@ -85,8 +85,18 @@ class GuideHeaderFooter extends Model
 
     function edit($type,$prj)
         {
+            $sx = '';
             $dt = $this->where('hd_project',$prj)->where('hd_type', $type)->first();
-            echo $this->getlastquery();
+
+            $act = get("action");
+            if ($act != '')
+                {
+                    $dta = $_POST;
+                    $this->set($dta)->where('id_hd',$dt['id_hd'])->update();
+                    $sx = metarefresh(PATH.'/admin/headers/');
+                    return $sx;
+                }
+
             if ($dt == '')
                 {
                     $dt['hd_project'] = $prj;
@@ -102,7 +112,7 @@ class GuideHeaderFooter extends Model
                     $dt['hd_type'] = $type;
                     $dt['id_hd'] = $this->set($dt)->insert();
                 }
-            $sx = '';
+
             $sx .= form_open();
             $sx .= form_hidden('id_hd',$dt['id_hd']);
             $sx .= '<label>'.h(lang('guide.config_'.$type),3).'</label>';

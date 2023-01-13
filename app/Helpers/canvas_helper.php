@@ -4,7 +4,7 @@
             {
                 $file = 'D:\GoogleDrive\Artigos\2021\EmQuestão - Identidade\cocitacao.txt';
                 $txt = file_get_contents($file);
-                
+
                 $ln = explode(chr(13),$txt);
                 $rv = array();
                 for ($r=0;$r < count($ln);$r++)
@@ -39,7 +39,7 @@
             }
         /*********************************************************************************** Close */
         function canvas_close()
-            {                
+            {
                     $sx = '</script>'.cr();
                     return $sx;
             }
@@ -47,7 +47,7 @@
         /*********************************************************************************** Rect */
         function canvas_rect($x,$y,$w,$z,$cor = 'green')
             {
-                    
+
                     $sx = 'context.fillStyle = "'.$cor.'";'.cr();
                     //$sx = 'content.fillStyle = "rgba(0, 0, 200, 0.5)";'.cr();
                     //$sx .= 'context.fillRect(10, 10, 150, 100);';
@@ -59,7 +59,7 @@
              {
 
                 $sx = canvas_open("canvas",768,1024);
-                $sx .= '                
+                $sx .= '
                 const canvas = document.getElementById("canvas");
                 const ctx = canvas.getContext("2d");
 
@@ -81,7 +81,7 @@
                 $sx .= 'context.fillStyle = "'.$xcor.'";'.cr();
                 $sx .= 'context.fillText("'.$txt.'", '.$x.', '.$y.');'.cr();
                 return $sx;
-            } 
+            }
         function canvas_line($x,$y,$z,$w,$xcor='black',$size=1)
             {
                 $sx = '';
@@ -93,7 +93,7 @@
                 $sx .= 'context.stroke();'.cr();
                 return $sx;
             }
-        /*************************************************************************************** CIRCLE */   
+        /*************************************************************************************** CIRCLE */
         function canvas_circle($x,$y,$r,$xcor='')
             {
                 global $opacy;
@@ -108,7 +108,7 @@
                         context.strokeStyle = "#330000";
                         context.stroke();'.cr();
                 return $sx;
-            }    
+            }
 
         function graph_bubble($dt)
             {
@@ -119,11 +119,11 @@
                 $offsetx = 400;
                 $offsety = 60;
                 $linespace = 20;
-                
-                $sx = '';                
+
+                $sx = '';
                 $sx .= $this->canvas($idc,1024,768);
 
-                $sx .= legends('xxxxxxxxxxxxxx');
+                $sx .= legends('XXX LEGENDS XXX');
 
                 for ($y=0;$y < count($dt);$y++)
                 {
@@ -148,8 +148,8 @@
                     }
                 }
 
-              
-                
+
+
                 return $sx;
             }
 
@@ -178,7 +178,7 @@
                     }
 
                 $sx .= 'context.rotate(-'.$rt.');';
-                $x = $yo-2; 
+                $x = $yo-2;
                 for ($r=2003;$r <= 2020;$r++)
                     {
                         $sx .= '
@@ -190,7 +190,7 @@
                         // set line color
                         context.strokeStyle = "#888";
                         context.stroke();
-                        ';       
+                        ';
                         $x = $x + $sp;
                     }
 
@@ -206,11 +206,8 @@
                         // set line color
                         context.strokeStyle = "#888";
                         context.stroke();
-                        ';       
+                        ';
                         $x = $x + 20;
-                    } 
+                    }
                 return $sx;
             }
-
-
-

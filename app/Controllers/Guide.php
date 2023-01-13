@@ -43,8 +43,6 @@ class Guide extends BaseController
 
         $sx = view('Headers/header');
 
-        echo "==d1=$d1==d2=$d2==d3=$d3==d4=$d4==";
-
         if ($d1=='')
             {
                 $sx .= bs($project->indice($prj, $d2, $d3));
