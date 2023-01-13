@@ -79,11 +79,11 @@ class Users extends Migration
                 'us_apikey_active' => 0,
                 'us_apikey_date' => '1900-01-01',
             );
-        $this->db->table('Users')->insert($data);
+        $this->db->table('users')->insert($data);
     }
 
     public function down()
     {
-        $this->forge->dropTable('Users');
+        $this->forge->dropTable('users');
     }
 }
