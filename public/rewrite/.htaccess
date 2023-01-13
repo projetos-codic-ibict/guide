@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+        RewriteEngine on
+        RewriteRule ^index.html$ index2.html
+</IfModule>
+<IfModule mod_rewrite.c>
+        RewriteEngine on
+        RewriteRule ^index.html$ index_redirect.html
+</IfModule>

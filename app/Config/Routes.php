@@ -53,14 +53,7 @@ $routes->get('/social/(:any)', 'Admin::socials/$1');
 $routes->post('/social/(:any)', 'Admin::socials/$1');
 
 $routes->get('/(:any)', 'Guide::index/$1');
-
-
-
 /*
-
-
-
-
 $routes->post('/guide/admin/', 'Guide::admin/');
 $routes->post('/admin/', 'Guide::admin/');
 $routes->post('/admin/(:any)/(:any)', 'Guide::/admin/$1/$2');
