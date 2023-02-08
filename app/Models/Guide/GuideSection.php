@@ -159,7 +159,7 @@ class GuideSection extends Model
             $sx .= $this->header($dt);
 
             $sx .= $this->summary($id);
-
+            $sx .= '<hr>';
             $sx .= $this->sections($id);
 
             return $sx;
@@ -248,7 +248,7 @@ class GuideSection extends Model
     function summary($id, $edit=0)
     {
         $sx = '';
-        $edit = 0;
+        $edit = 1;
         $Socials = new \App\Models\Socials();
         $user = $Socials->getUser();
         if ($edit == 1)

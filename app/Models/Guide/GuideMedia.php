@@ -52,8 +52,6 @@ class GuideMedia extends Model
             switch($d1)
                 {
                     case 'upload':
-                        print_r($_FILES,false);
-                        $sx .= '==========================================';
                         $sx .= $this->upload($prj);
                         break;
                     case 'all':
@@ -84,8 +82,6 @@ class GuideMedia extends Model
         {
             $GuideProject = new \App\Models\Guide\GuideProject();
             $prj = $GuideProject->getProject();
-
-            pre($_FILES,false);
 
             $valid = '';
             if (isset($_FILES['media']['type']))
