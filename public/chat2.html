@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Assíncrono com Ollama</title>
+    <script>
+        function sendMessage() {
+            // Obtém a mensagem do usuário
+            var message = document.getElementById("message").value;
+
+            // Cria um objeto XMLHttpRequest
+            var xhttp = new XMLHttpRequest();
+
+            // Configura a requisição
+            xhttp.open("POST", "process_ollama.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // Função para processar a resposta
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Exibe a resposta
+                    document.getElementById("response").innerHTML = this.responseText;
+                }
+            };
+
+            // Envia a mensagem
+            xhttp.send("message=" + encodeURIComponent(message));
+        }
+    </script>
+</head>
+<body>
+    <h1>Chat Assíncrono com Ollama</h1>
+    <form onsubmit="sendMessage(); return false;">
+        <label for="message">Mensagem:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
+        <input type="submit" value="Enviar">
+    </form>
+
+    <h2>Resposta:</h2>
+    <div id="response"></div>
+</body>
+</html>
